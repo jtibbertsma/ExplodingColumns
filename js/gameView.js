@@ -26,15 +26,18 @@ $(function () {
       this.columns.push([]);
     }
 
-    this.keyPresses = {
-      w: 0,
-      a: 0,
-      s: 0,
-      d: 0
-    };
+    this.keyPresses = {};
+    this.clearKeyPresses();
 
     Columns.bindKeys(this.keyPresses);
   };
+
+  GameView.prototype.clearKeyPresses = function () {
+    this.keyPresses.a = 0;
+    this.keyPresses.s = 0;
+    this.keyPresses.w = 0;
+    this.keyPresses.d = 0;
+  },
 
   GameView.prototype.randomColor = function () {
     return this.colors[Math.floor(Math.random()*this.colors.length)];
@@ -42,7 +45,6 @@ $(function () {
 
   GameView.prototype.start = function () {
     this._running = true;
-    this.canvas.on("nextIteration", this.nextIteration.bind(this));
     this.nextBlock();
   };
 
@@ -51,6 +53,8 @@ $(function () {
   },
 
   GameView.prototype.nextIteration = function () {
+    console.log(this.keyPresses);
+    this.clearKeyPresses();
     if (!this.gameOver()) {
       this.nextBlock();
     } else {

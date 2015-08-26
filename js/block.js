@@ -8,7 +8,8 @@ $(function () {
     this.view = options.view;
     this.col = options.startCol;
     this.fallTo = this.calculateFallTo();
-    this.speed = 0.1; // pixels per millisecond
+    this.fallSpeed = 0.1; // pixels per millisecond
+    this.dropSpeed = 1;
 
     this.rect = new fabric.Rect({
       top: -20,
@@ -22,9 +23,71 @@ $(function () {
     this.view.canvas.add(this.rect);
   };
 
+  // actions
+  // 1: move left
+  // 2: move right
+  // 3: drop
+  // 4: rotate
+
+  Block.prototype.doAction = function () {
+    var action = this.pendingAction;
+    this.pendingAction = null;
+
+    switch (action) {
+      case 1:
+        this.moveAndContinueFalling(-1);
+        break
+      case 2:
+        this.moveAndContinueFalling(1);
+        break;
+    }
+  };
+
   Block.prototype.checkForPendingActions = function () {
+    if (this.view.keyPresses.a && this.canMoveLeft()) {
+      this.view.keyPresses.a -= 1;
+      this.pendingAction = 1;
+
+      return true;
+    }
+
+    if (this.view.keyPresses.d && this.canMoveRight()) {
+      this.view.keyPresses.d -= 1;
+      this.pendingAction = 2;
+
+      return true;
+    }
+
     return false;
   },
+
+  Block.prototype.canMoveLeft = function () {
+    return this.canMove(-1);
+  };
+
+  Block.prototype.canMoveRight = function () {
+    return this.canMove(1);
+  };
+
+  Block.prototype.canMove = function(dir) {
+    var newCol = this.col + dir;
+
+    if (newCol < 0 || newCol >= this.view.columns.length) {
+      return false;
+    }
+
+    var bottomHeight = this.rect.top - 20;
+    var colHeight = this.view.columns[newCol].length * 20;
+
+    return bottomHeight > colHeight;
+  };
+
+  Block.prototype.moveAndContinueFalling = function (dir) {
+    this.col += dir;
+    this.rect.set({left: this.col * 20});
+    this.fallTo = this.calculateFallTo();
+    this.startFalling();
+  };
 
   Block.prototype.startFalling = function () {
     this.rect.animate('top', this.fallTo, {
@@ -34,10 +97,9 @@ $(function () {
       abort: this.checkForPendingActions.bind(this),
 
       onComplete: function () {
-        if (this.rect.top <= this.fallTo) {
-          console.log("ping");
+        if (Math.round(this.rect.top) >= this.fallTo) {
           this.view.columns[this.col].push(this);
-          this.view.canvas.fire("nextIteration");
+          this.view.nextIteration();
         } else if (this.pendingAction) {
           this.doAction();
         }
@@ -53,6 +115,6 @@ $(function () {
   Block.prototype.calculateFallDuration = function () {
     // v = d/t
     var distance = this.fallTo - this.rect.top;
-    return distance / this.speed;
+    return distance / this.fallSpeed;
   };
 });

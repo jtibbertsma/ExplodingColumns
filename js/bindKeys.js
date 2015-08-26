@@ -8,16 +8,16 @@ $(function () {
       var code = event.keyCode;
 
       switch (code) {
-        case 'a':
+        case 97:
           keyPresses.a += 1;
           break;
-        case 's':
+        case 115:
           keyPresses.s += 1;
           break;
-        case 'd':
+        case 100:
           keyPresses.d += 1;
           break;
-        case 'w':
+        case 119:
           keyPresses.w += 1;
           break;
       }
