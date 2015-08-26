@@ -25,6 +25,15 @@ $(function () {
     for (i = 0; i < this.numColumns; i++) {
       this.columns.push([]);
     }
+
+    this.keyPresses = {
+      w: 0,
+      a: 0,
+      s: 0,
+      d: 0
+    };
+
+    Columns.bindKeys(this.keyPresses);
   };
 
   GameView.prototype.randomColor = function () {
