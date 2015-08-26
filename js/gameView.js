@@ -19,22 +19,42 @@ $(function () {
     this.numColumns = width / 20;
     this.numRows = height / 20;
     this.columns = [];
+    this.startCol = 11;
+    this.colors = ['red', 'blue', 'green', 'orange', 'purple', 'yellow'];
 
     for (i = 0; i < this.numColumns; i++) {
       this.columns.push([]);
     }
   };
 
+  GameView.prototype.randomColor = function () {
+    return this.colors[Math.floor(Math.random()*this.colors.length)];
+  },
+
   GameView.prototype.start = function () {
     this._running = true;
+    this.canvas.on("nextIteration", this.nextIteration.bind(this));
     this.nextBlock();
   };
+
+  GameView.prototype.gameOver = function () {
+    return this.columns[this.startCol].length * 20 === this.height;
+  },
+
+  GameView.prototype.nextIteration = function () {
+    if (!this.gameOver()) {
+      this.nextBlock();
+    } else {
+      console.log("gameOver");
+    }
+  },
 
   GameView.prototype.nextBlock = function () {
     this.currentBlock = new Columns.Block({
       view: this,
-      color: 'red'
+      color: this.randomColor(),
+      startCol: this.startCol
     });
-    this.currentBlock.fall();
+    this.currentBlock.startFalling();
   };
 });
