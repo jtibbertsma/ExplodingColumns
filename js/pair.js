@@ -25,8 +25,11 @@ $(function () {
 
     this.topBlock = this.primaryBlock;
     this.bottomBlock = this.secondaryBlock;
+
     this.leftBlock = null;
     this.rightBlock = null;
+
+    this.orientation = "vertical";
   };
 
   Pair.prototype.timeToStop = function () {
@@ -51,17 +54,21 @@ $(function () {
 
     switch (action) {
       case 1:
-        this.primaryBlock.move(-1);
-        this.secondaryBlock.move(-1);
+        this.primaryBlock.moveLeftOrRight(-1);
+        this.secondaryBlock.moveLeftOrRight(-1);
         break
       case 2:
-        this.primaryBlock.move(1);
-        this.secondaryBlock.move(1);
+        this.primaryBlock.moveLeftOrRight(1);
+        this.secondaryBlock.moveLeftOrRight(1);
+        break;
+      case 4:
+        this.rotate();
         break;
     }
   };
 
   Pair.prototype.checkForPendingActions = function () {
+    // move left
     if (this.view.keyPresses.a && this.bottomBlock.canMoveLeft()) {
       this.view.keyPresses.a -= 1;
       this.pendingAction = 1;
@@ -69,14 +76,45 @@ $(function () {
       return true;
     }
 
-    if (this.view.keyPresses.d && this.bottomBlock.canMoveRight()) {
+    // move right
+    else if (this.view.keyPresses.d && this.bottomBlock.canMoveRight()) {
       this.view.keyPresses.d -= 1;
       this.pendingAction = 2;
 
       return true;
     }
 
+    // rotate
+    else if (this.view.keyPresses.w) {
+      if (this.canRotate()) {
+        this.view.keyPresses.w -= 1;
+        this.pendingAction = 4;
+
+        return true;
+      } else {
+        this.view.keyPresses.w = 0;
+      }
+    }
+
     return false;
+  };
+
+  Pair.prototype.canRotate = function () {
+    if (this.orientation === "horizontal") {
+      return true;
+    }
+
+    // rotate right
+    if (this.bottomBlock === this.primaryBlock) {
+      return this.primaryBlock.canMoveRight();
+    } else {
+      return this.primaryBlock.canMoveLeft();
+    }
+  };
+
+  Pair.prototype.rotate = function () {
+    this.primaryBlock.primaryRotation();
+    this.secondaryBlock.secondaryRotation();
   };
 
   Pair.prototype.startFalling = function () {

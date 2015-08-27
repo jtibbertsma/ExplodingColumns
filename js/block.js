@@ -53,10 +53,18 @@ $(function () {
     return bottomHeight < colHeight;
   };
 
-  Block.prototype.move = function (dir) {
+  Block.prototype.moveLeftOrRight = function (dir) {
     this.col += dir;
     this.rect.set({left: this.col * 20});
     this.fallTo = this.calculateFallTo();
+  };
+
+  Block.prototype.primaryRotation = function () {
+    this.rotate();
+  };
+
+  Block.prototype.secondaryRotation = function () {
+    this.rotate();
   };
 
   Block.prototype.timeToStop = function () {
