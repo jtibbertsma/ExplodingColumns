@@ -46,30 +46,31 @@ $(function () {
   GameView.prototype.start = function () {
     this._running = true;
     this.canvas.on("nextIteration", this.nextIteration.bind(this));
-    this.nextBlock();
+    this.nextPair();
   };
 
   GameView.prototype.gameOver = function () {
-    return this.columns[this.startCol].length * 20 === this.height;
+    return this.columns[this.startCol].length * 20 > this.height;
   },
 
   GameView.prototype.nextIteration = function () {
     console.log(this.keyPresses);
     this.clearKeyPresses();
     if (!this.gameOver()) {
-      this.nextBlock();
+      this.nextPair();
     } else {
       this.canvas.off("nextIteration");
       console.log("gameOver");
     }
   },
 
-  GameView.prototype.nextBlock = function () {
-    this.currentBlock = new Columns.Block({
+  GameView.prototype.nextPair = function () {
+    this.currentPair = new Columns.Pair({
       view: this,
-      color: this.randomColor(),
+      color1: this.randomColor(),
+      color2: this.randomColor(),
       startCol: this.startCol
     });
-    this.currentBlock.startFalling();
+    this.currentPair.startFalling();
   };
 });

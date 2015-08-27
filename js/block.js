@@ -5,20 +5,20 @@ $(function () {
 
   var Block = Columns.Block = function (options) {
     this.color = options.color;
-    this.view = options.view;
-    this.col = options.startCol;
-    this.fallTo = this.calculateFallTo();
-    this.fallSpeed = 2; // pixels per frame
     this.dropSpeed = 10;
+    this.fallSpeed = options.fallSpeed;
+    this.view = options.view;
+    this.col = options.col;
 
     this.rect = new fabric.Rect({
-      top: -20,
+      top: options.top,
       left: this.col * 20,
       height: 20,
       width: 20,
       fill: this.color
     });
 
+    this.fallTo = this.calculateFallTo();
     this.view.canvas.add(this.rect);
   };
 
@@ -98,31 +98,22 @@ $(function () {
   };
 
   Block.prototype.timeToStop = function () {
+    // this.fallTo = this.calculateFallTo();
     if (this.rect.top > this.fallTo) {
-      this.rect.set('top', this.fallTo);
-      this.view.columns[this.col].push(this);
       return true;
     }
 
     return false;
   };
 
-  Block.prototype.moveDown = function () {
-    this.rect.set('top', this.rect.top + this.fallSpeed);
+  Block.prototype.stop = function () {
+    this.fallTo = this.calculateFallTo();
+    this.rect.set('top', this.fallTo);
+    this.view.columns[this.col].push(this);
   };
 
-  Block.prototype.startFalling = function () {
-    this._interval = setInterval(function () {
-      if (this.checkForPendingActions()) {
-        this.doAction();
-      }
-      if (this.timeToStop()) {
-        clearInterval(this._interval);
-        this.view.canvas.fire("nextIteration");
-      }
-      this.moveDown();
-      this.view.canvas.renderAll();
-    }.bind(this), 1000 / 60);
+  Block.prototype.moveDown = function () {
+    this.rect.set('top', this.rect.top + this.fallSpeed);
   };
 
   Block.prototype.calculateFallTo = function () {
