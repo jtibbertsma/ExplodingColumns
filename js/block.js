@@ -113,7 +113,7 @@ $(function () {
   };
 
   Block.prototype.calculateFallDuration = function () {
-    // v = d/t
+    // t = d/v
     var distance = this.fallTo - this.rect.top;
     return distance / this.fallSpeed;
   };
