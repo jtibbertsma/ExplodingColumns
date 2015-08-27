@@ -8,8 +8,8 @@ $(function () {
     this.view = options.view;
     this.col = options.startCol;
     this.fallTo = this.calculateFallTo();
-    this.fallSpeed = 0.1; // pixels per frame
-    this.dropSpeed = 1;
+    this.fallSpeed = 2; // pixels per frame
+    this.dropSpeed = 10;
 
     this.rect = new fabric.Rect({
       top: -20,
@@ -58,14 +58,24 @@ $(function () {
     }
 
     return false;
-  },
+  };
 
   Block.prototype.canMoveLeft = function () {
-    return this.canMove(-1);
+    var _canMove = this.canMove(-1);
+    if (!_canMove) {
+      this.view.keyPresses.a = 0;
+    }
+
+    return _canMove;
   };
 
   Block.prototype.canMoveRight = function () {
-    return this.canMove(1);
+    var _canMove = this.canMove(1);
+    if (!_canMove) {
+      this.view.keyPresses.d = 0;
+    }
+
+    return _canMove;
   };
 
   Block.prototype.canMove = function(dir) {
@@ -75,21 +85,30 @@ $(function () {
       return false;
     }
 
-    var bottomHeight = this.rect.top - 20;
-    var colHeight = this.view.columns[newCol].length * 20;
+    var bottomHeight = this.rect.top + 20;
+    var colHeight = this.view.height - this.view.columns[newCol].length * 20;
 
     return bottomHeight < colHeight;
   };
 
   Block.prototype.moveAndContinueFalling = function (dir) {
-    // this.col += dir;
-    // this.rect.set({left: this.col * 20});
-    // this.fallTo = this.calculateFallTo();
-    // this.startFalling();
+    this.col += dir;
+    this.rect.set({left: this.col * 20});
+    this.fallTo = this.calculateFallTo();
   };
 
   Block.prototype.timeToStop = function () {
+    if (this.rect.top > this.fallTo) {
+      this.rect.set('top', this.fallTo);
+      this.view.columns[this.col].push(this);
+      return true;
+    }
 
+    return false;
+  };
+
+  Block.prototype.moveDown = function () {
+    this.rect.set('top', this.rect.top + this.fallSpeed);
   };
 
   Block.prototype.startFalling = function () {
@@ -102,7 +121,8 @@ $(function () {
         this.view.canvas.fire("nextIteration");
       }
       this.moveDown();
-    }, 1000 / 60);
+      this.view.canvas.renderAll();
+    }.bind(this), 1000 / 60);
   };
 
   Block.prototype.calculateFallTo = function () {
