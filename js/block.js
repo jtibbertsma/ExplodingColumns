@@ -8,7 +8,7 @@ $(function () {
     this.view = options.view;
     this.col = options.startCol;
     this.fallTo = this.calculateFallTo();
-    this.fallSpeed = 0.1; // pixels per millisecond
+    this.fallSpeed = 0.1; // pixels per frame
     this.dropSpeed = 1;
 
     this.rect = new fabric.Rect({
@@ -19,7 +19,6 @@ $(function () {
       fill: this.color
     });
 
-    this.fallDuration = this.calculateFallDuration();
     this.view.canvas.add(this.rect);
   };
 
@@ -79,42 +78,35 @@ $(function () {
     var bottomHeight = this.rect.top - 20;
     var colHeight = this.view.columns[newCol].length * 20;
 
-    return bottomHeight > colHeight;
+    return bottomHeight < colHeight;
   };
 
   Block.prototype.moveAndContinueFalling = function (dir) {
-    this.col += dir;
-    this.rect.set({left: this.col * 20});
-    this.fallTo = this.calculateFallTo();
-    this.startFalling();
+    // this.col += dir;
+    // this.rect.set({left: this.col * 20});
+    // this.fallTo = this.calculateFallTo();
+    // this.startFalling();
+  };
+
+  Block.prototype.timeToStop = function () {
+
   };
 
   Block.prototype.startFalling = function () {
-    this.rect.animate('top', this.fallTo, {
-      onChange: this.view.canvas.renderAll.bind(this.view.canvas),
-      duration: this.fallDuration,
-
-      abort: this.checkForPendingActions.bind(this),
-
-      onComplete: function () {
-        if (Math.round(this.rect.top) >= this.fallTo) {
-          this.view.columns[this.col].push(this);
-          this.view.nextIteration();
-        } else if (this.pendingAction) {
-          this.doAction();
-        }
-      }.bind(this)
-    });
+    this._interval = setInterval(function () {
+      if (this.checkForPendingActions()) {
+        this.doAction();
+      }
+      if (this.timeToStop()) {
+        clearInterval(this._interval);
+        this.view.canvas.fire("nextIteration");
+      }
+      this.moveDown();
+    }, 1000 / 60);
   };
 
   Block.prototype.calculateFallTo = function () {
     var blocksInCol = this.view.columns[this.col].length;
     return (this.view.height - 20) - blocksInCol * 20;
-  };
-
-  Block.prototype.calculateFallDuration = function () {
-    // t = d/v
-    var distance = this.fallTo - this.rect.top;
-    return distance / this.fallSpeed;
   };
 });

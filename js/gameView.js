@@ -45,6 +45,7 @@ $(function () {
 
   GameView.prototype.start = function () {
     this._running = true;
+    this.canvas.on("nextIteration", this.nextIteration.bind(this));
     this.nextBlock();
   };
 
@@ -58,6 +59,7 @@ $(function () {
     if (!this.gameOver()) {
       this.nextBlock();
     } else {
+      this.canvas.off("nextIteration");
       console.log("gameOver");
     }
   },
