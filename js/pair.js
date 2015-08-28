@@ -168,6 +168,11 @@ $(function () {
     }
   };
 
+  // If this returns true, stop the interval
+  // This function is also responsible for putting the blocks
+  // in their proper resting postitions
+  // The callback fires an event at the canvas that causes the
+  // next iteration of the main game loop to begin
   Pair.prototype.timeToStop = function (callback) {
     if (this.orientation === "vertical") {
       if (this.bottomBlock.timeToStop()) {
@@ -186,14 +191,20 @@ $(function () {
         this.rightBlock.stop();
 
         return true;
+
       } else if (left) {
         this.leftBlock.stop();
-        this.rightBlock.drop(callback);
+        setTimeout(function () {
+          this.rightBlock.drop(callback);
+        }.bind(this), 0);
 
         return true;
+
       } else if (right) {
         this.rightBlock.stop();
-        this.leftBlock.drop(callback);
+        setTimeout(function () {
+          this.leftBlock.drop(callback);
+        }.bind(this), 0);
 
         return true;
       }
