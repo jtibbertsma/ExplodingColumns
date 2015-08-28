@@ -32,16 +32,6 @@ $(function () {
     this.orientation = "vertical";
   };
 
-  Pair.prototype.timeToStop = function () {
-    if (this.bottomBlock.timeToStop()) {
-      this.bottomBlock.stop();
-      this.topBlock.stop();
-      return true;
-    }
-
-    return false;
-  };
-
   // actions
   // 1: move left
   // 2: move right
@@ -69,7 +59,7 @@ $(function () {
 
   Pair.prototype.checkForPendingActions = function () {
     // move left
-    if (this.view.keyPresses.a && this.bottomBlock.canMoveLeft()) {
+    if (this.view.keyPresses.a && this.canMoveLeft()) {
       this.view.keyPresses.a -= 1;
       this.pendingAction = 1;
 
@@ -77,7 +67,7 @@ $(function () {
     }
 
     // move right
-    else if (this.view.keyPresses.d && this.bottomBlock.canMoveRight()) {
+    else if (this.view.keyPresses.d && this.canMoveRight()) {
       this.view.keyPresses.d -= 1;
       this.pendingAction = 2;
 
@@ -99,6 +89,22 @@ $(function () {
     return false;
   };
 
+  Pair.prototype.canMoveLeft = function () {
+    if (this.orientation === "vertical") {
+      return this.bottomBlock.canMoveLeft();
+    } else {
+      return this.leftBlock.canMoveLeft();
+    }
+  };
+
+  Pair.prototype.canMoveRight = function () {
+    if (this.orientation === "vertical") {
+      return this.bottomBlock.canMoveRight();
+    } else {
+      return this.rightBlock.canMoveRight();
+    }
+  };
+
   Pair.prototype.canRotate = function () {
     if (this.orientation === "horizontal") {
       return true;
@@ -107,14 +113,93 @@ $(function () {
     // rotate right
     if (this.bottomBlock === this.primaryBlock) {
       return this.primaryBlock.canMoveRight();
-    } else {
+    }
+    // rotate left
+    else {
       return this.primaryBlock.canMoveLeft();
     }
   };
 
+  Pair.prototype.rotateFromVertical = function () {
+    if (this.bottomBlock === this.primaryBlock) {
+      this.secondaryBlock.moveLeftOrRight(1);
+      this.secondaryBlock.jump(20);
+
+      this.leftBlock = this.primaryBlock;
+      this.rightBlock = this.secondaryBlock;
+    } else {
+      this.secondaryBlock.moveLeftOrRight(-1);
+      this.secondaryBlock.jump(-20);
+
+      this.rightBlock = this.primaryBlock;
+      this.leftBlock = this.secondaryBlock;
+    }
+
+    this.bottomBlock = null;
+    this.topBlock = null;
+    this.orientation = 'horizontal';
+  };
+
+  Pair.prototype.rotateFromHorizontal = function () {
+    if (this.leftBlock === this.primaryBlock) {
+      this.secondaryBlock.jump(20);
+      this.secondaryBlock.moveLeftOrRight(-1);
+
+      this.topBlock = this.primaryBlock;
+      this.bottomBlock = this.secondaryBlock;
+    } else {
+      this.secondaryBlock.jump(-20);
+      this.secondaryBlock.moveLeftOrRight(1);
+
+      this.bottomBlock = this.primaryBlock;
+      this.topBlock = this.secondaryBlock;
+    }
+
+    this.leftBlock = null;
+    this.rightBlock = null;
+    this.orientation = 'vertical';
+  };
+
   Pair.prototype.rotate = function () {
-    this.primaryBlock.primaryRotation();
-    this.secondaryBlock.secondaryRotation();
+    if (this.orientation === 'vertical') {
+      this.rotateFromVertical();
+    } else {
+      this.rotateFromHorizontal();
+    }
+  };
+
+  Pair.prototype.timeToStop = function (callback) {
+    if (this.orientation === "vertical") {
+      if (this.bottomBlock.timeToStop()) {
+        setTimeout(callback, 0);
+        this.bottomBlock.stop();
+        this.topBlock.stop();
+        return true;
+      }
+    } else {
+      var left = this.leftBlock.timeToStop();
+      var right = this.rightBlock.timeToStop();
+
+      if (left && right) {
+        setTimeout(callback, 0);
+        this.leftBlock.stop();
+        this.rightBlock.stop();
+
+        return true;
+      } else if (left) {
+        this.leftBlock.stop();
+        this.rightBlock.drop(callback);
+
+        return true;
+      } else if (right) {
+        this.rightBlock.stop();
+        this.leftBlock.drop(callback);
+
+        return true;
+      }
+    }
+
+    return false;
   };
 
   Pair.prototype.startFalling = function () {
@@ -122,13 +207,15 @@ $(function () {
       if (this.checkForPendingActions()) {
         this.doAction();
       }
-      if (this.timeToStop()) {
-        clearInterval(this._interval);
+      if (this.timeToStop(function () {
         this.view.canvas.fire("nextIteration");
+      }.bind(this))) {
+        clearInterval(this._interval);
+      } else {
+        this.primaryBlock.moveDown();
+        this.secondaryBlock.moveDown();
+        this.view.canvas.renderAll();
       }
-      this.primaryBlock.moveDown();
-      this.secondaryBlock.moveDown();
-      this.view.canvas.renderAll();
     }.bind(this), 1000 / 60);
   };
 });

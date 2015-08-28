@@ -5,7 +5,7 @@ $(function () {
 
   var Block = Columns.Block = function (options) {
     this.color = options.color;
-    this.dropSpeed = 10;
+    this.dropSpeed = 2;
     this.fallSpeed = options.fallSpeed;
     this.view = options.view;
     this.col = options.col;
@@ -59,14 +59,6 @@ $(function () {
     this.fallTo = this.calculateFallTo();
   };
 
-  Block.prototype.primaryRotation = function () {
-    this.rotate();
-  };
-
-  Block.prototype.secondaryRotation = function () {
-    this.rotate();
-  };
-
   Block.prototype.timeToStop = function () {
     // this.fallTo = this.calculateFallTo();
     if (this.rect.top > this.fallTo) {
@@ -74,6 +66,10 @@ $(function () {
     }
 
     return false;
+  };
+
+  Block.prototype.jump = function (distance) {
+    this.rect.set('top', this.rect.top + distance);
   };
 
   Block.prototype.stop = function () {
