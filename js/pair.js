@@ -180,8 +180,8 @@ $(function () {
 
   Pair.prototype.drop = function () {
     setTimeout(function () {
-      this.view.addToDropQueue(this.primaryBlock);
-      this.view.addToDropQueue(this.secondaryBlock);
+      this.view.addToDropQueue(this.bottomBlock || this.leftBlock);
+      this.view.addToDropQueue(this.topBlock || this.rightBlock);
       this.view.executeDrop();
     }.bind(this), 0);
   };
@@ -221,7 +221,7 @@ $(function () {
             onComplete: callback,
             topOffset: 0
           });
-        }.bind(this), 300);
+        }.bind(this), 150);
 
         return true;
 
@@ -232,7 +232,7 @@ $(function () {
             onComplete: callback,
             topOffset: 0
           });
-        }.bind(this), 300);
+        }.bind(this), 150);
 
         return true;
       }

@@ -32,7 +32,7 @@ $(function () {
     for (var time = 0, i = 0, offset = 0;
             i < blocks.length; time += 30, offset -= 20, i++) {
       setTimeout(blocks[i].drop.bind(blocks[i], {
-        topOffset: offset,
+        topOffset: offset + 0,
         onComplete: function () {
           this.canvas.fire("doneDropping");
         }.bind(this)
@@ -55,8 +55,7 @@ $(function () {
   };
 
   DropQueue.prototype.doneDropping = function () {
-    --this._pending;
-    if (this._pending === 0) {
+    if (--this._pending === 0) {
       this.canvas.off("doneDropping");
       this._dropQueue = {};
       this.canvas.fire("nextIteration");

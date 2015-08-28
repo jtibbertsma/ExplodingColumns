@@ -76,6 +76,7 @@ $(function () {
     this.fallTo = this.calculateFallTo();
     this.rect.set('top', this.fallTo);
     this.view.columns[this.col].push(this);
+    this.row = this.view.columns[this.col].length - 1;
   };
 
   Block.prototype.moveDown = function () {
