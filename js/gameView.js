@@ -44,7 +44,6 @@ $(function () {
   },
 
   GameView.prototype.start = function () {
-    this._running = true;
     this.canvas.on("nextIteration", this.nextIteration.bind(this));
     this.nextPair();
   };
@@ -65,12 +64,12 @@ $(function () {
   },
 
   GameView.prototype.nextPair = function () {
-    this.currentPair = new Columns.Pair({
+    var currentPair = new Columns.Pair({
       view: this,
       color1: this.randomColor(),
       color2: this.randomColor(),
       startCol: this.startCol
     });
-    this.currentPair.startFalling();
+    currentPair.startFalling();
   };
 });

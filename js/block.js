@@ -5,7 +5,7 @@ $(function () {
 
   var Block = Columns.Block = function (options) {
     this.color = options.color;
-    this.dropSpeed = 2;
+    this.dropSpeed = 0.3;
     this.fallSpeed = options.fallSpeed;
     this.view = options.view;
     this.col = options.col;
@@ -85,5 +85,22 @@ $(function () {
   Block.prototype.calculateFallTo = function () {
     var blocksInCol = this.view.columns[this.col].length;
     return (this.view.height - 20) - blocksInCol * 20;
+  };
+
+  Block.prototype.drop = function (options) {
+    var callback = options.onComplete;
+    var distance = this.fallTo - this.rect.top;
+
+    var duration = distance / this.dropSpeed;
+
+    this.rect.animate("top", this.fallTo + options.topOffset, {
+      duration: duration,
+      onChange: this.view.canvas.renderAll.bind(this.view.canvas),
+      easing: fabric.util.ease.easeOutBounce,
+      onComplete: function () {
+        this.stop();
+        callback();
+      }.bind(this)
+    });
   };
 });

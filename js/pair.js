@@ -51,6 +51,10 @@ $(function () {
         this.primaryBlock.moveLeftOrRight(1);
         this.secondaryBlock.moveLeftOrRight(1);
         break;
+      case 3:
+        this.killInterval = true;
+        this.drop();
+        break;
       case 4:
         this.rotate();
         break;
@@ -71,6 +75,12 @@ $(function () {
       this.view.keyPresses.d -= 1;
       this.pendingAction = 2;
 
+      return true;
+    }
+
+    // drop
+    else if (this.view.keyPresses.s) {
+      this.pendingAction = 3;
       return true;
     }
 
@@ -168,12 +178,24 @@ $(function () {
     }
   };
 
+  Pair.prototype.drop = function () {
+    setInterval(function () {
+      this.view.addToDropQueue(this.primaryBlock);
+      this.view.addToDropQueue(this.secondaryBlock);
+      this.view.executeDrop();
+    }.bind(this), 0);
+  };
+
   // If this returns true, stop the interval
   // This function is also responsible for putting the blocks
   // in their proper resting postitions
   // The callback fires an event at the canvas that causes the
   // next iteration of the main game loop to begin
   Pair.prototype.timeToStop = function (callback) {
+    if (this.killInterval) {
+      return true;
+    }
+
     if (this.orientation === "vertical") {
       if (this.bottomBlock.timeToStop()) {
         setTimeout(callback, 0);
@@ -195,16 +217,22 @@ $(function () {
       } else if (left) {
         this.leftBlock.stop();
         setTimeout(function () {
-          this.rightBlock.drop(callback);
-        }.bind(this), 0);
+          this.rightBlock.drop({
+            onComplete: callback,
+            topOffset: 0
+          });
+        }.bind(this), 300);
 
         return true;
 
       } else if (right) {
         this.rightBlock.stop();
         setTimeout(function () {
-          this.leftBlock.drop(callback);
-        }.bind(this), 0);
+          this.leftBlock.drop({
+            onComplete: callback,
+            topOffset: 0
+          });
+        }.bind(this), 300);
 
         return true;
       }
