@@ -179,7 +179,7 @@ $(function () {
   };
 
   Pair.prototype.drop = function () {
-    setInterval(function () {
+    setTimeout(function () {
       this.view.addToDropQueue(this.primaryBlock);
       this.view.addToDropQueue(this.secondaryBlock);
       this.view.executeDrop();

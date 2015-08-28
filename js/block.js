@@ -89,7 +89,7 @@ $(function () {
 
   Block.prototype.drop = function (options) {
     var callback = options.onComplete;
-    var distance = this.fallTo - this.rect.top;
+    var distance = (this.fallTo + options.topOffset) - this.rect.top;
 
     var duration = distance / this.dropSpeed;
 
