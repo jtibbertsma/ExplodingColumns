@@ -1,8 +1,3 @@
 canvas {
-  position: relative;
   border: thin black solid;
-  top: 50px;
-  left: 200px;
-  width: 450px;
-  height: 500px;
 }
