@@ -62,8 +62,10 @@ $(function () {
   };
 
   GameView.prototype.nextIteration = function () {
-    console.log(this.keyPresses);
     this.clearKeyPresses();
+    if (Columns.searchForExplosions(this)) {
+      return;   // nextIteration is called again once the explosion finishes
+    }
     if (!this.gameOver()) {
       this.nextPair();
     } else {
