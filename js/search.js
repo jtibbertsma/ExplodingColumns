@@ -23,8 +23,8 @@ $(function () {
         this.currentIteration = [];
         this.searchNode(this.columns[i][j]);
 
-        if (this.currentIteration.length > this.view.numberToExplode) {
-          this.exploders.concat(this.currentIteration);
+        if (this.currentIteration.length >= this.view.numberToExplode) {
+          this.exploders = this.exploders.concat(this.currentIteration);
         }
       }
     }

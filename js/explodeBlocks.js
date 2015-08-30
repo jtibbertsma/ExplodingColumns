@@ -4,7 +4,6 @@ $(function () {
   }
 
   Columns.explodeBlocks = function (view, blocks) {
-    console.log(blocks);
-    view.canvas.fire("nextIteration");
+    
   };
 });
