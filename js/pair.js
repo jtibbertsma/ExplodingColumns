@@ -162,6 +162,7 @@ $(function () {
   Pair.prototype.stopIfFinished = function (callback) {
     if (this.killInterval) {
       this.doneFalling = true;
+      clearInterval(this._interval);
       return;
     }
 
