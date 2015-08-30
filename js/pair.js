@@ -5,7 +5,7 @@ $(function () {
 
   var Pair = Columns.Pair = function (options) {
     this.view = options.view;
-    this.fallSpeed = 2; // pixels per frame
+    this.fallSpeed = options.fallSpeed; // pixels per frame
     this.doneFalling = false;
 
     this.primaryBlock = new Columns.Block({

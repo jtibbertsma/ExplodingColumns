@@ -28,6 +28,7 @@ $(function () {
     }
 
     if (this._pending === 0) {
+      this.canvas.off("doneDropping");
       this.canvas.fire("nextIteration");
     }
   };

@@ -17,6 +17,9 @@ $(function () {
     this.height = height;
 
     this.numberToExplode = 4;
+    this.avalanchRows = 1;
+    this.fallSpeed = 2;
+    this.turnNumber = 0;
 
     this.numColumns = width / 20;
     // this.numRows = height / 20;
@@ -63,14 +66,43 @@ $(function () {
     this.dropQueue.executeDrop();
   };
 
+  GameView.prototype.raiseDifficulty = function () {
+    this.avalanchRows++;
+    this.fallSpeed++;
+  };
+
+  GameView.prototype.avalanch = function () {
+    for (var i = 0; i < this.avalanchRows; i++) {
+      for (var j = 0; j < this.numColumns; j++) {
+        this.addToDropQueue(new Columns.Block({
+          color: 'gray',
+          top: -20 - (i * 20),
+          col: j,
+          view: this
+        }));
+      }
+    }
+
+    setTimeout(this.executeDrop.bind(this), 0);
+  };
+
   GameView.prototype.nextIteration = function () {
     this.clearKeyPresses();
+
+    if (++this.turnNumber % 30 === 0) {
+      this.raiseDifficulty();
+    }
+
+    if (this.turnNumber % 10 === 0) {
+      this.avalanch(); // async
+      return;
+    }
     
     var blocksToExplode = Columns.searchForExplosions(this);
 
     if (blocksToExplode.length > 0) {
-      Columns.explodeBlocks(this, blocksToExplode);
-      return;   // nextIteration gets fired once explosion animations are done
+      Columns.explodeBlocks(this, blocksToExplode); // async
+      return;
     }
 
     if (!this.gameOver()) {
@@ -86,7 +118,8 @@ $(function () {
       view: this,
       color1: this.randomColor(),
       color2: this.randomColor(),
-      startCol: this.startCol
+      startCol: this.startCol,
+      fallSpeed: this.fallSpeed
     });
     currentPair.fall();
   };
