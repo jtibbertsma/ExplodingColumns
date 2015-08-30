@@ -20,6 +20,7 @@ $(function () {
     this.avalanchRows = 1;
     this.fallSpeed = 2;
     this.turnNumber = 0;
+    this.combo = 0;
 
     this.numColumns = width / 20;
     // this.numRows = height / 20;
@@ -67,19 +68,21 @@ $(function () {
   };
 
   GameView.prototype.raiseDifficulty = function () {
-    this.avalanchRows++;
+    //this.avalanchRows++;
     this.fallSpeed++;
   };
 
   GameView.prototype.avalanch = function () {
     for (var i = 0; i < this.avalanchRows; i++) {
       for (var j = 0; j < this.numColumns; j++) {
-        this.addToDropQueue(new Columns.Block({
-          color: 'gray',
-          top: -20 - (i * 20),
-          col: j,
-          view: this
-        }));
+        if (Math.random() > 0.5) {
+          this.addToDropQueue(new Columns.Block({
+            color: 'gray',
+            top: -20 - (i * 20),
+            col: j,
+            view: this
+          }));
+        }
       }
     }
 
@@ -88,24 +91,33 @@ $(function () {
 
   GameView.prototype.nextIteration = function () {
     this.clearKeyPresses();
-
-    if (++this.turnNumber % 30 === 0) {
-      this.raiseDifficulty();
-    }
-
-    if (this.turnNumber % 10 === 0) {
-      this.avalanch(); // async
-      return;
-    }
     
     var blocksToExplode = Columns.searchForExplosions(this);
 
     if (blocksToExplode.length > 0) {
+      this.combo += 1;
       Columns.explodeBlocks(this, blocksToExplode); // async
       return;
     }
 
+    if (this.combo > 1) {
+      this.fallSpeed -= 1;
+      if (this.fallSpeed < 2) {
+        this.fallSpeed = 2;
+      }
+    }
+    this.combo = 0;
+
     if (!this.gameOver()) {
+      if (++this.turnNumber % 30 === 0) {
+        this.raiseDifficulty();
+      }
+
+      if (this.turnNumber % 10 === 0) {
+        this.avalanch(); // async
+        return;
+      }
+
       this.nextPair();
     } else {
       this.canvas.off("nextIteration");
