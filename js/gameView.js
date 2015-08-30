@@ -66,12 +66,12 @@ $(function () {
   GameView.prototype.nextIteration = function () {
     this.clearKeyPresses();
     
-    var blocksToExplode = Columns.searchForExplosions(this);
+    // var blocksToExplode = Columns.searchForExplosions(this);
 
-    if (blocksToExplode.length > 0) {
-      Columns.explodeBlocks(this, blocksToExplode);
-      return;   // nextIteration gets fired once explosion animations are done
-    }
+    // if (blocksToExplode.length > 0) {
+    //   Columns.explodeBlocks(this, blocksToExplode);
+    //   return;   // nextIteration gets fired once explosion animations are done
+    // }
 
     if (!this.gameOver()) {
       this.nextPair();
