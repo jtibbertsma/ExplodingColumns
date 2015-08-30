@@ -81,6 +81,6 @@ $(function () {
       color2: this.randomColor(),
       startCol: this.startCol
     });
-    currentPair.startFalling();
+    currentPair.fall();
   };
 });

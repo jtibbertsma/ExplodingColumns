@@ -6,6 +6,7 @@ $(function () {
   var Pair = Columns.Pair = function (options) {
     this.view = options.view;
     this.fallSpeed = 2; // pixels per frame
+    this.doneFalling = false;
 
     this.primaryBlock = new Columns.Block({
       color: options.color1,
@@ -32,71 +33,39 @@ $(function () {
     this.orientation = "vertical";
   };
 
-  // actions
-  // 1: move left
-  // 2: move right
-  // 3: drop
-  // 4: rotate
-
-  Pair.prototype.doAction = function () {
-    var action = this.pendingAction;
-    this.pendingAction = null;
-
-    switch (action) {
-      case 1:
-        this.primaryBlock.moveLeftOrRight(-1);
-        this.secondaryBlock.moveLeftOrRight(-1);
-        break
-      case 2:
-        this.primaryBlock.moveLeftOrRight(1);
-        this.secondaryBlock.moveLeftOrRight(1);
-        break;
-      case 3:
-        this.killInterval = true;
-        this.drop();
-        break;
-      case 4:
-        this.rotate();
-        break;
-    }
-  };
-
-  Pair.prototype.checkForPendingActions = function () {
+  Pair.prototype.executePendingActions = function () {
     // move left
     if (this.view.keyPresses.a && this.canMoveLeft()) {
       this.view.keyPresses.a -= 1;
-      this.pendingAction = 1;
 
-      return true;
+      this.primaryBlock.moveInDir(-1);
+      this.secondaryBlock.moveInDir(-1);
     }
 
     // move right
     else if (this.view.keyPresses.d && this.canMoveRight()) {
       this.view.keyPresses.d -= 1;
-      this.pendingAction = 2;
 
-      return true;
+      this.primaryBlock.moveInDir(1);
+      this.secondaryBlock.moveInDir(1);
     }
 
     // drop
     else if (this.view.keyPresses.s) {
-      this.pendingAction = 3;
-      return true;
+      this.killInterval = true;
+      this.drop();
     }
 
     // rotate
     else if (this.view.keyPresses.w) {
       if (this.canRotate()) {
         this.view.keyPresses.w -= 1;
-        this.pendingAction = 4;
 
-        return true;
+        this.rotate();
       } else {
         this.view.keyPresses.w = 0;
       }
     }
-
-    return false;
   };
 
   Pair.prototype.canMoveLeft = function () {
@@ -132,13 +101,13 @@ $(function () {
 
   Pair.prototype.rotateFromVertical = function () {
     if (this.bottomBlock === this.primaryBlock) {
-      this.secondaryBlock.moveLeftOrRight(1);
+      this.secondaryBlock.moveInDir(1);
       this.secondaryBlock.jump(20);
 
       this.leftBlock = this.primaryBlock;
       this.rightBlock = this.secondaryBlock;
     } else {
-      this.secondaryBlock.moveLeftOrRight(-1);
+      this.secondaryBlock.moveInDir(-1);
       this.secondaryBlock.jump(-20);
 
       this.rightBlock = this.primaryBlock;
@@ -153,13 +122,13 @@ $(function () {
   Pair.prototype.rotateFromHorizontal = function () {
     if (this.leftBlock === this.primaryBlock) {
       this.secondaryBlock.jump(20);
-      this.secondaryBlock.moveLeftOrRight(-1);
+      this.secondaryBlock.moveInDir(-1);
 
       this.topBlock = this.primaryBlock;
       this.bottomBlock = this.secondaryBlock;
     } else {
       this.secondaryBlock.jump(-20);
-      this.secondaryBlock.moveLeftOrRight(1);
+      this.secondaryBlock.moveInDir(1);
 
       this.bottomBlock = this.primaryBlock;
       this.topBlock = this.secondaryBlock;
@@ -191,28 +160,29 @@ $(function () {
   // in their proper resting postitions
   // The callback fires an event at the canvas that causes the
   // next iteration of the main game loop to begin
-  Pair.prototype.timeToStop = function (callback) {
+  Pair.prototype.stopIfFinished = function (callback) {
     if (this.killInterval) {
-      return true;
+      this.doneFalling = true;
     }
 
     if (this.orientation === "vertical") {
-      if (this.bottomBlock.timeToStop()) {
+      if (this.bottomBlock.finishedFalling()) {
         setTimeout(callback, 0);
         this.bottomBlock.stop();
         this.topBlock.stop();
-        return true;
+
+        this.doneFalling = true;
       }
     } else {
-      var left = this.leftBlock.timeToStop();
-      var right = this.rightBlock.timeToStop();
+      var left = this.leftBlock.finishedFalling();
+      var right = this.rightBlock.finishedFalling();
 
       if (left && right) {
         setTimeout(callback, 0);
         this.leftBlock.stop();
         this.rightBlock.stop();
 
-        return true;
+        this.doneFalling = true;
 
       } else if (left) {
         this.leftBlock.stop();
@@ -223,7 +193,7 @@ $(function () {
           });
         }.bind(this), 150);
 
-        return true;
+        this.doneFalling = true;
 
       } else if (right) {
         this.rightBlock.stop();
@@ -234,23 +204,24 @@ $(function () {
           });
         }.bind(this), 150);
 
-        return true;
+        this.doneFalling = true;
       }
     }
 
-    return false;
+    if (this.doneFalling) {
+      clearInterval(this._interval);
+    }
   };
 
-  Pair.prototype.startFalling = function () {
+  Pair.prototype.fall = function () {
     this._interval = setInterval(function () {
-      if (this.checkForPendingActions()) {
-        this.doAction();
-      }
-      if (this.timeToStop(function () {
+      this.executePendingActions();
+
+      this.stopIfFinished(function () {
         this.view.canvas.fire("nextIteration");
-      }.bind(this))) {
-        clearInterval(this._interval);
-      } else {
+      }.bind(this));
+
+      if (!this.doneFalling) {
         this.primaryBlock.moveDown();
         this.secondaryBlock.moveDown();
         this.view.canvas.renderAll();

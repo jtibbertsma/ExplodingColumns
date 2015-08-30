@@ -53,13 +53,13 @@ $(function () {
     return bottomHeight < colHeight;
   };
 
-  Block.prototype.moveLeftOrRight = function (dir) {
+  Block.prototype.moveInDir = function (dir) {
     this.col += dir;
     this.rect.set({left: this.col * 20});
     this.fallTo = this.calculateFallTo();
   };
 
-  Block.prototype.timeToStop = function () {
+  Block.prototype.finishedFalling = function () {
     // this.fallTo = this.calculateFallTo();
     if (this.rect.top > this.fallTo) {
       return true;
