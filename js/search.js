@@ -50,8 +50,8 @@ $(function () {
   };
 
   Searcher.prototype.validBlock = function (i, j) {
-    return i > 0 && i < this.columns.length &&
-           j > 0 && j < this.columns[i].length;
+    return i >= 0 && i < this.columns.length &&
+           j >= 0 && j < this.columns[i].length;
   };
 
   Searcher.prototype.getAdjacent = function (block) {

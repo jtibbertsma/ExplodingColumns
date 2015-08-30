@@ -88,6 +88,21 @@ $(function () {
     return (this.view.height - 20) - blocksInCol * 20;
   };
 
+  Block.prototype.explode = function (numFlashes) {
+    var index = [this.col, this.row];
+    var color = this.color;
+
+    this._flashInterval = setInterval(function () {
+      this.rect.set('fill', this.rect.fill === color ? "white" : color);
+      if (--numFlashes[index] === 0) {
+        clearInterval(this._flashInterval);
+        this.view.canvas.remove(this.rect);
+        this.view.canvas.fire("doneExploding");
+      }
+      this.view.canvas.renderAll();
+    }.bind(this), 40);
+  };
+
   Block.prototype.drop = function (options) {
     var callback = options.onComplete;
     var distance = (this.fallTo + options.topOffset) - this.rect.top;

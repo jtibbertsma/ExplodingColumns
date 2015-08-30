@@ -14,9 +14,9 @@ $(function () {
     this.blocks = blocks;
     this.alreadyChecked = {};
     this.pendingFlashes = {};
-    this.numPending = blocks.length;
+    this.numPendingExplosions = blocks.length;
 
-    for (var i = 0; i < this.numPending; i++) {
+    for (var i = 0; i < this.numPendingExplosions; i++) {
       this.pendingFlashes[[this.blocks[i].col, this.blocks[i].row]] = 6;
     }
   };
@@ -24,10 +24,22 @@ $(function () {
   Exploder.prototype.explode = function () {
     this.spliceColumns();
     debugger;
+    this.view.canvas.on("doneExploding", function () {
+      if (--this.numPendingExplosions === 0) {
+        this.view.canvas.off("doneExploding");
+        this.view.executeDrop();
+      }
+    }.bind(this));
+
+    var time = 0;
+    this.blocks.forEach(function (block) {
+      setTimeout(block.explode.bind(block, this.pendingFlashes), time);
+      time += 30;
+    }.bind(this));
   };
 
   Exploder.prototype.spliceColumns = function () {
-    for (var i = 0; i < this.numPending; i++) {
+    for (var i = 0; i < this.numPendingExplosions; i++) {
       var col = this.blocks[i].col;
       var row = this.blocks[i].row;
 

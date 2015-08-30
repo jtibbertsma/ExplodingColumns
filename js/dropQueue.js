@@ -26,6 +26,10 @@ $(function () {
       setTimeout(this.dropColumn.bind(this, this._dropQueue[keys[i]]), time);
       this._pending += this._dropQueue[keys[i]].length;
     }
+
+    if (this._pending === 0) {
+      this.canvas.fire("nextIteration");
+    }
   };
 
   DropQueue.prototype.dropColumn = function (blocks) {
