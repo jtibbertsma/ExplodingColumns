@@ -104,6 +104,8 @@ $(function () {
   };
 
   Block.prototype.drop = function (options) {
+    this.fallTo = this.calculateFallTo();
+
     var callback = options.onComplete;
     var distance = (this.fallTo + options.topOffset) - this.rect.top;
 

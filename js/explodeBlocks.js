@@ -23,7 +23,7 @@ $(function () {
 
   Exploder.prototype.explode = function () {
     this.spliceColumns();
-    debugger;
+
     this.view.canvas.on("doneExploding", function () {
       if (--this.numPendingExplosions === 0) {
         this.view.canvas.off("doneExploding");
