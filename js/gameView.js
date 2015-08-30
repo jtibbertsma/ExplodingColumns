@@ -16,6 +16,8 @@ $(function () {
     this.width = width;
     this.height = height;
 
+    this.numberToExplode = 4;
+
     this.numColumns = width / 20;
     // this.numRows = height / 20;
     this.columns = [];
@@ -63,9 +65,14 @@ $(function () {
 
   GameView.prototype.nextIteration = function () {
     this.clearKeyPresses();
-    if (Columns.searchForExplosions(this)) {
-      return;   // nextIteration is called again once the explosion finishes
+    
+    var blocksToExplode = Columns.searchForExplosions(this);
+
+    if (blocksToExplode.length > 0) {
+      Columns.explodeBlocks(this, blocksToExplode);
+      return;   // nextIteration gets fired once explosion animations are done
     }
+
     if (!this.gameOver()) {
       this.nextPair();
     } else {

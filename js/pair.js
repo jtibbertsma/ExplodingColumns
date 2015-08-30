@@ -33,41 +33,6 @@ $(function () {
     this.orientation = "vertical";
   };
 
-  Pair.prototype.executePendingActions = function () {
-    // move left
-    if (this.view.keyPresses.a && this.canMoveLeft()) {
-      this.view.keyPresses.a -= 1;
-
-      this.primaryBlock.moveInDir(-1);
-      this.secondaryBlock.moveInDir(-1);
-    }
-
-    // move right
-    else if (this.view.keyPresses.d && this.canMoveRight()) {
-      this.view.keyPresses.d -= 1;
-
-      this.primaryBlock.moveInDir(1);
-      this.secondaryBlock.moveInDir(1);
-    }
-
-    // drop
-    else if (this.view.keyPresses.s) {
-      this.killInterval = true;
-      this.drop();
-    }
-
-    // rotate
-    else if (this.view.keyPresses.w) {
-      if (this.canRotate()) {
-        this.view.keyPresses.w -= 1;
-
-        this.rotate();
-      } else {
-        this.view.keyPresses.w = 0;
-      }
-    }
-  };
-
   Pair.prototype.canMoveLeft = function () {
     if (this.orientation === "vertical") {
       return this.bottomBlock.canMoveLeft();
@@ -155,14 +120,49 @@ $(function () {
     }.bind(this), 0);
   };
 
-  // If this returns true, stop the interval
-  // This function is also responsible for putting the blocks
-  // in their proper resting postitions
+  Pair.prototype.executePendingActions = function () {
+    // move left
+    if (this.view.keyPresses.a && this.canMoveLeft()) {
+      this.view.keyPresses.a -= 1;
+
+      this.primaryBlock.moveInDir(-1);
+      this.secondaryBlock.moveInDir(-1);
+    }
+
+    // move right
+    else if (this.view.keyPresses.d && this.canMoveRight()) {
+      this.view.keyPresses.d -= 1;
+
+      this.primaryBlock.moveInDir(1);
+      this.secondaryBlock.moveInDir(1);
+    }
+
+    // drop
+    else if (this.view.keyPresses.s) {
+      this.killInterval = true;
+      this.drop();
+    }
+
+    // rotate
+    else if (this.view.keyPresses.w) {
+      if (this.canRotate()) {
+        this.view.keyPresses.w -= 1;
+
+        this.rotate();
+      } else {
+        this.view.keyPresses.w = 0;
+      }
+    }
+  };
+
+  // This function is responsible for putting the blocks
+  // in their proper resting postitions if were done falling.
   // The callback fires an event at the canvas that causes the
-  // next iteration of the main game loop to begin
+  // next iteration of the main game loop to begin.
   Pair.prototype.stopIfFinished = function (callback) {
     if (this.killInterval) {
       this.doneFalling = true;
+      return;
     }
 
     if (this.orientation === "vertical") {
