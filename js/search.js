@@ -77,7 +77,7 @@ $(function () {
   };
 
   Searcher.prototype.getAdjacentOfSameColor = function (block) {
-    return this.getAdjacent(block).map(function (adjBlock) {
+    return this.getAdjacent(block).filter(function (adjBlock) {
       return adjBlock.color === block.color;
     });
   };
