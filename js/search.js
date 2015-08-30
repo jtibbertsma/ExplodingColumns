@@ -14,6 +14,7 @@ $(function () {
     this.view = view;
     this.columns = view.columns;
     this.searched = {};
+    this.grays = {};
     this.exploders = [];
   };
 
@@ -28,6 +29,8 @@ $(function () {
         }
       }
     }
+
+    this.exploders = this.exploders.concat(this.grayNeighbors());
   };
 
   Searcher.prototype.searchNode = function (block) {
@@ -37,6 +40,11 @@ $(function () {
     }
 
     this.searched[blockNodeIndex] = true;
+
+    if (block.color === "gray") {
+      return;
+    }
+
     this.currentIteration.push(block);
 
     var adjacent = this.getAdjacentOfSameColor(block);
@@ -80,5 +88,27 @@ $(function () {
     return this.getAdjacent(block).filter(function (adjBlock) {
       return adjBlock.color === block.color;
     });
+  };
+
+  Searcher.prototype.grayNeighbors = function () {
+    var grays = [];
+    this.exploders.forEach(function (block) {
+      grays = grays.concat(this.getAdjacent(block).filter(function (maybeGray) {
+        var index = [maybeGray.col, maybeGray.row];
+
+        if (this.grays[index]) {
+          return false;
+        }
+
+        if (maybeGray.color === "gray") {
+          this.grays[index] = true;
+          return true;
+        }
+
+        return false;
+      }.bind(this)));
+    }.bind(this));
+
+    return grays;
   };
 });
