@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Exploding Columns</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+  
+  <link rel="stylesheet" href="css/app.css">
+
+  <script src="js/fabric.min.js"></script>
+  <script src="js/pair.js"></script>
+  <script src="js/block.js"></script>
+  <script src="js/bindKeys.js"></script>
+  <script src="js/dropQueue.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/explodeBlocks.js"></script>
+  <script src="js/gameView.js"></script>
+</head>
+<body>
+  <div class="container-fluid">
+
+    <div class="row">
+      <div class="col-xs-4">
+        <h2 class="header">Exploding Columns</h2>
+        <h3>Controls</h3>
+        <ul>
+          <li>a: move left</li>
+          <li>d: move right</li>
+          <li>w: rotate</li>
+          <li>s: drop</li>
+        </ul>
+
+        <h3>Instructions</h3>
+        <ul>
+          <li>Connect four tiles of the same color to make them explode!</li>
+          <li>Watch out for avalanches!</li>
+          <li>Your tiles will begin to fall faster after a while.</li>
+          <li>You can slow your tiles back down by getting a combo.</li>
+          <li>The game lasts until the middle column fills up.</li>
+          <li>Survive for as long as possible!</li>
+        </ul>
+      </div>
+
+      <div class="col-xs-8">
+        <canvas id="canvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(function () {
+      var view = new Columns.GameView("canvas", 460, 500);
+      view.start();
+    });
+  </script>
+</body>
+</html>
