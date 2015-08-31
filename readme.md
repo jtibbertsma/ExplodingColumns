@@ -2,7 +2,7 @@
 
 [Play Here][live]
 
-[live]: http://jtibbertsma.github.io/explodingcolumns
+[live]: http://jtibbertsma.github.io/ExplodingColumns
 
 ## Description
 
