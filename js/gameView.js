@@ -18,19 +18,11 @@ $(function () {
 
     this.numberToExplode = 4;
     this.avalanchRows = 1;
-    this.fallSpeed = 2;
-    this.turnNumber = 0;
-    this.combo = 0;
 
     this.numColumns = width / 20;
     // this.numRows = height / 20;
-    this.columns = [];
     this.startCol = Math.floor(this.numColumns / 2);
     this.colors = ['red', 'blue', 'green', 'orange', 'purple', 'yellow'];
-
-    for (i = 0; i < this.numColumns; i++) {
-      this.columns.push([]);
-    }
 
     this.dropQueue = new Columns.DropQueue(this);
     this.keyPresses = {};
@@ -41,21 +33,29 @@ $(function () {
 
   GameView.prototype.createPlayGamePane = function () {
     var $canvasContainer = $(".canvas-container");
-    this.$overlay = $("<div>").addClass("overlay");
 
+    this.$transparent = $("<div>").addClass("overlay");
+    this.$overlay = $("<div>").addClass("outer-overlay");
+
+    $canvasContainer.append(this.$transparent);
     $canvasContainer.append(this.$overlay);
 
+    this.$overlay.append($("<h3 class=\"game-over\">Welcome</h3>"));
+    this.makeOverlayButton("Play Game");
+  };
+
+  GameView.prototype.makeOverlayButton = function (text) {
     var $start = $("<button>")
       .addClass("btn")
       .addClass("btn-primary")
       .addClass("overlay-btn")
-      .text("Play Game");
+      .text(text);
 
     this.$overlay.append($start);
 
     $start.one("click", function () {
       this.start();
-    }.bind(this))
+    }.bind(this));
   };
 
   GameView.prototype.clearKeyPresses = function () {
@@ -70,10 +70,22 @@ $(function () {
   };
 
   GameView.prototype.start = function () {
+    this.clearKeyPresses();
+
     this.canvas.on("nextIteration", this.nextIteration.bind(this));
     this.canvas.clear();
     this.$overlay.html("");
-    this.$overlay.addClass("invisible");
+    this.$transparent.addClass("invisible");
+
+    this.columns = [];
+
+    for (i = 0; i < this.numColumns; i++) {
+      this.columns.push([]);
+    }
+
+    this.fallSpeed = 2;
+    this.turnNumber = 0;
+    this.combo = 0;
 
     this.nextPair();
   };
@@ -144,7 +156,13 @@ $(function () {
       this.nextPair();
     } else {
       this.canvas.off("nextIteration");
-      this.$overlay.removeClass("invisible");
+      this.$transparent.removeClass("invisible");
+
+      setTimeout(function () {
+        this.$overlay.append($("<h3 class=\"game-over\">Game Over</h3>"));
+
+        this.makeOverlayButton("Play Again?");
+      }.bind(this), 1000);
     }
   };
 
