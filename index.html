@@ -26,7 +26,34 @@
   <script src="js/gameView.js"></script>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
+  <div class="container-fluid">
+
+    <div class="row">
+      <div class="col-xs-4">
+        <h2 class="header">Exploding Columns</h2>
+        <h3>Controls</h3>
+        <ul>
+          <li>a: move left</li>
+          <li>d: move right</li>
+          <li>w: rotate</li>
+          <li>s: drop</li>
+        </ul>
+
+        <h3>Instructions</h3>
+        <ul>
+          <li>Connect four tiles of the same color to make them explode!</li>
+          <li>Watch out for avalanches!</li>
+          <li>Your tiles will begin to fall faster after a while.</li>
+          <li>You can slow your tiles back down by getting a combo.</li>
+          <li>Survive for as long as possible!</li>
+        </ul>
+      </div>
+
+      <div class="col-xs-8">
+        <canvas id="canvas"></canvas>
+      </div>
+    </div>
+  </div>
 
   <script>
     $(function () {

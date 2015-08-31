@@ -1,3 +1,16 @@
 canvas {
   border: thin black solid;
 }
+
+body {
+  margin-top: 50px;
+}
+
+h2.header {
+  margin-top: 0px;
+  margin-bottom: 70px;
+}
+
+.row > .col-xs-3.instructions {
+  margin-right: 100px;
+}
