@@ -39,6 +39,25 @@ $(function () {
     Columns.bindKeys(this.keyPresses);
   };
 
+  GameView.prototype.createPlayGamePane = function () {
+    var $canvasContainer = $(".canvas-container");
+    this.$overlay = $("<div>").addClass("overlay");
+
+    $canvasContainer.append(this.$overlay);
+
+    var $start = $("<button>")
+      .addClass("btn")
+      .addClass("btn-primary")
+      .addClass("overlay-btn")
+      .text("Play Game");
+
+    this.$overlay.append($start);
+
+    $start.one("click", function () {
+      this.start();
+    }.bind(this))
+  };
+
   GameView.prototype.clearKeyPresses = function () {
     this.keyPresses.a = 0;
     this.keyPresses.s = 0;
@@ -52,6 +71,10 @@ $(function () {
 
   GameView.prototype.start = function () {
     this.canvas.on("nextIteration", this.nextIteration.bind(this));
+    this.canvas.clear();
+    this.$overlay.html("");
+    this.$overlay.addClass("invisible");
+
     this.nextPair();
   };
 
@@ -121,7 +144,7 @@ $(function () {
       this.nextPair();
     } else {
       this.canvas.off("nextIteration");
-      console.log("gameOver");
+      this.$overlay.removeClass("invisible");
     }
   };
 
