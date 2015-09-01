@@ -15,10 +15,6 @@ $(function () {
     this.alreadyChecked = {};
     this.numPendingExplosions = tiles.length;
     this.explosionIndices = [];
-
-    tiles.forEach(function (tile) {
-      this.explosionIndices[[tile.col, tile.row]] = true;
-    }.bind(this));
   };
 
   Exploder.prototype.explode = function () {
@@ -39,23 +35,33 @@ $(function () {
   };
 
   Exploder.prototype.spliceColumns = function () {
-    for (var i = 0; i < this.numPendingExplosions; i++) {
-      var col = this.tiles[i].col;
-      var row = this.tiles[i].row;
+    var lowest = this.lowestInColumns();
+    for (var col in lowest) {
+      var row = lowest[col].row;
+      for (var n = row; n < this.columns[col].length; n++) {
+        var node = this.columns[col][n];
+        var nodeIndex = [node.col, node.row];
 
-      if (!this.alreadyChecked[[col, row]]) {
-        for (var n = row; n < this.columns[col].length; n++) {
-          var node = this.columns[col][n];
-          var nodeIndex = [node.col, node.row];
-
-          this.alreadyChecked[nodeIndex] = true;
-          if (!this.explosionIndices[nodeIndex]) {
-            this.view.addToDropQueue(node);
-          }
+        this.alreadyChecked[nodeIndex] = true;
+        if (!this.explosionIndices[nodeIndex]) {
+          this.view.addToDropQueue(node);
         }
-
-        this.columns[col].splice(row, this.columns[col].length);
       }
+
+      this.columns[col].splice(row, this.columns[col].length);
     }
+  };
+
+  Exploder.prototype.lowestInColumns = function () {
+    var lowest = {};
+    this.tiles.forEach(function (tile) {
+      this.explosionIndices[[tile.col, tile.row]] = true;
+
+      if (!lowest[tile.col] || lowest[tile.col].row > tile.row) {
+        lowest[tile.col] = tile;
+      }
+    }.bind(this));
+
+    return lowest;
   };
 });

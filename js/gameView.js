@@ -31,7 +31,7 @@ $(function () {
     Columns.bindKeys(this.keyPresses);
   };
 
-  GameView.prototype.createPlayGamePane = function () {
+  GameView.prototype.createWelcomePane = function () {
     var $canvasContainer = $(".canvas-container");
 
     this.$transparent = $("<div>").addClass("overlay");
