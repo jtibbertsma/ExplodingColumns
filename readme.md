@@ -18,7 +18,7 @@ filled up with tiles. The goal is to survive as long as possible.
 right, respectively.
 * Rotate the pair of tiles using w.
 * Drop fast using s.
-* 'Avalanches' will periodically fall from the top of the screen, blocking the player's
+* 'Avalanches' will periodically fall from the top of the screen, tileing the player's
 progress.
 * The fall rate of descent of the pairs of tiles will increase after each third avalanche fall.
 * The player can earn a decrease in the rate of descent by getting an explosion combo.
@@ -33,6 +33,7 @@ This is a list of features that I intend to implement soon.
 - [x] After the game ends, have a button to play again. (Right now, you have to reload the page)
   - [x] Have a nice transparent overlay over the canvas that fades in after the game ends
 - [ ] Factor game logic out of GameView.
+- [ ] Instead of a combo just slowing down fall rate if the fall rate has sped up, let combos prevent the fall rate from rising for a certain amount of time.
 - [ ] Display the number of turns that a player has survived.
   - [ ] Store a player's high score as a cookie on their browser.
 - [ ] Display the colors of the pair of tiles that will fall on the next turn.
