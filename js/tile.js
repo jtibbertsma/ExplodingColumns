@@ -3,7 +3,7 @@ $(function () {
     window.Columns = {};
   }
 
-  var Block = Columns.Block = function (options) {
+  var Tile = Columns.Tile = function (options) {
     this.color = options.color;
     this.dropSpeed = 0.3;
     this.fallSpeed = options.fallSpeed;
@@ -22,7 +22,7 @@ $(function () {
     this.view.canvas.add(this.rect);
   };
 
-  Block.prototype.canMoveLeft = function () {
+  Tile.prototype.canMoveLeft = function () {
     var _canMove = this.canMove(-1);
     if (!_canMove) {
       this.view.keyPresses.a = 0;
@@ -31,7 +31,7 @@ $(function () {
     return _canMove;
   };
 
-  Block.prototype.canMoveRight = function () {
+  Tile.prototype.canMoveRight = function () {
     var _canMove = this.canMove(1);
     if (!_canMove) {
       this.view.keyPresses.d = 0;
@@ -40,7 +40,7 @@ $(function () {
     return _canMove;
   };
 
-  Block.prototype.canMove = function(dir) {
+  Tile.prototype.canMove = function(dir) {
     var newCol = this.col + dir;
 
     if (newCol < 0 || newCol >= this.view.columns.length) {
@@ -53,13 +53,13 @@ $(function () {
     return bottomHeight < colHeight;
   };
 
-  Block.prototype.moveInDir = function (dir) {
+  Tile.prototype.moveInDir = function (dir) {
     this.col += dir;
     this.rect.set({left: this.col * 20});
     this.fallTo = this.calculateFallTo();
   };
 
-  Block.prototype.finishedFalling = function () {
+  Tile.prototype.finishedFalling = function () {
     // this.fallTo = this.calculateFallTo();
     if (this.rect.top > this.fallTo) {
       return true;
@@ -68,33 +68,33 @@ $(function () {
     return false;
   };
 
-  Block.prototype.jump = function (distance) {
+  Tile.prototype.jump = function (distance) {
     this.rect.set('top', this.rect.top + distance);
   };
 
-  Block.prototype.stop = function () {
+  Tile.prototype.stop = function () {
     this.fallTo = this.calculateFallTo();
     this.rect.set('top', this.fallTo);
     this.view.columns[this.col].push(this);
     this.row = this.view.columns[this.col].length - 1;
   };
 
-  Block.prototype.moveDown = function () {
+  Tile.prototype.moveDown = function () {
     this.rect.set('top', this.rect.top + this.fallSpeed);
   };
 
-  Block.prototype.calculateFallTo = function () {
-    var blocksInCol = this.view.columns[this.col].length;
-    return (this.view.height - 20) - blocksInCol * 20;
+  Tile.prototype.calculateFallTo = function () {
+    var tilesInCol = this.view.columns[this.col].length;
+    return (this.view.height - 20) - tilesInCol * 20;
   };
 
-  Block.prototype.explode = function (numFlashes) {
-    var index = [this.col, this.row];
+  Tile.prototype.explode = function () {
+    var numFlashes = 6;
     var color = this.color;
 
     this._flashInterval = setInterval(function () {
       this.rect.set('fill', this.rect.fill === color ? "white" : color);
-      if (--numFlashes[index] === 0) {
+      if (--numFlashes === 0) {
         clearInterval(this._flashInterval);
         this.view.canvas.remove(this.rect);
         this.view.canvas.fire("doneExploding");
@@ -103,7 +103,7 @@ $(function () {
     }.bind(this), 40);
   };
 
-  Block.prototype.drop = function (options) {
+  Tile.prototype.drop = function (options) {
     this.fallTo = this.calculateFallTo();
 
     var callback = options.onComplete;

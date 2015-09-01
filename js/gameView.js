@@ -94,8 +94,8 @@ $(function () {
     return this.columns[this.startCol].length * 20 > this.height;
   };
 
-  GameView.prototype.addToDropQueue = function (block) {
-    this.dropQueue.add(block);
+  GameView.prototype.addToDropQueue = function (tile) {
+    this.dropQueue.add(tile);
   };
 
   GameView.prototype.executeDrop = function () {
@@ -111,7 +111,7 @@ $(function () {
     for (var i = 0; i < this.avalanchRows; i++) {
       for (var j = 0; j < this.numColumns; j++) {
         if (Math.random() > 0.5) {
-          this.addToDropQueue(new Columns.Block({
+          this.addToDropQueue(new Columns.Tile({
             color: 'gray',
             top: -20 - (i * 20),
             col: j,
@@ -127,11 +127,11 @@ $(function () {
   GameView.prototype.nextIteration = function () {
     this.clearKeyPresses();
     
-    var blocksToExplode = Columns.searchForExplosions(this);
+    var tilesToExplode = Columns.searchForExplosions(this);
 
-    if (blocksToExplode.length > 0) {
+    if (tilesToExplode.length > 0) {
       this.combo += 1;
-      Columns.explodeBlocks(this, blocksToExplode); // async
+      Columns.explodeTiles(this, tilesToExplode); // async
       return;
     }
 

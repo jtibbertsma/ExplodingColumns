@@ -33,21 +33,21 @@ $(function () {
     this.exploders = this.exploders.concat(this.grayNeighbors());
   };
 
-  Searcher.prototype.searchNode = function (block) {
-    var blockNodeIndex = [block.col, block.row];
-    if (this.searched[blockNodeIndex]) {
+  Searcher.prototype.searchNode = function (tile) {
+    var tileNodeIndex = [tile.col, tile.row];
+    if (this.searched[tileNodeIndex]) {
       return;
     }
 
-    this.searched[blockNodeIndex] = true;
+    this.searched[tileNodeIndex] = true;
 
-    if (block.color === "gray") {
+    if (tile.color === "gray") {
       return;
     }
 
-    this.currentIteration.push(block);
+    this.currentIteration.push(tile);
 
-    var adjacent = this.getAdjacentOfSameColor(block);
+    var adjacent = this.getAdjacentOfSameColor(tile);
     for (var i = 0; i < adjacent.length; i++) {
       var nodeIndex = [adjacent[i].col, adjacent[i].row];
 
@@ -57,43 +57,43 @@ $(function () {
     }
   };
 
-  Searcher.prototype.validBlock = function (i, j) {
+  Searcher.prototype.validTile = function (i, j) {
     return i >= 0 && i < this.columns.length &&
            j >= 0 && j < this.columns[i].length;
   };
 
-  Searcher.prototype.getAdjacent = function (block) {
-    var adjacent = [], i = block.col, j = block.row;
+  Searcher.prototype.getAdjacent = function (tile) {
+    var adjacent = [], i = tile.col, j = tile.row;
 
-    if (this.validBlock(i, j + 1)) {
+    if (this.validTile(i, j + 1)) {
       adjacent.push(this.columns[i][j + 1]);
     }
 
-    if (this.validBlock(i + 1, j)) {
+    if (this.validTile(i + 1, j)) {
       adjacent.push(this.columns[i + 1][j]);
     }
 
-    if (this.validBlock(i, j - 1)) {
+    if (this.validTile(i, j - 1)) {
       adjacent.push(this.columns[i][j - 1]);
     }
 
-    if (this.validBlock(i - 1, j)) {
+    if (this.validTile(i - 1, j)) {
       adjacent.push(this.columns[i - 1][j]);
     }
 
     return adjacent;
   };
 
-  Searcher.prototype.getAdjacentOfSameColor = function (block) {
-    return this.getAdjacent(block).filter(function (adjBlock) {
-      return adjBlock.color === block.color;
+  Searcher.prototype.getAdjacentOfSameColor = function (tile) {
+    return this.getAdjacent(tile).filter(function (adjTile) {
+      return adjTile.color === tile.color;
     });
   };
 
   Searcher.prototype.grayNeighbors = function () {
     var grays = [];
-    this.exploders.forEach(function (block) {
-      grays = grays.concat(this.getAdjacent(block).filter(function (maybeGray) {
+    this.exploders.forEach(function (tile) {
+      grays = grays.concat(this.getAdjacent(tile).filter(function (maybeGray) {
         var index = [maybeGray.col, maybeGray.row];
 
         if (this.grays[index]) {

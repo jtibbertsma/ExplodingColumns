@@ -9,12 +9,12 @@ $(function () {
     this._dropQueue = {};
   };
 
-  DropQueue.prototype.add = function (block) {
-    if (typeof this._dropQueue[block.col] === "undefined") {
-      this._dropQueue[block.col] = [];
+  DropQueue.prototype.add = function (tile) {
+    if (typeof this._dropQueue[tile.col] === "undefined") {
+      this._dropQueue[tile.col] = [];
     }
 
-    this._dropQueue[block.col].push(block);
+    this._dropQueue[tile.col].push(tile);
   };
 
   DropQueue.prototype.executeDrop = function () {
@@ -33,10 +33,10 @@ $(function () {
     }
   };
 
-  DropQueue.prototype.dropColumn = function (blocks) {
+  DropQueue.prototype.dropColumn = function (tiles) {
     for (var time = 0, i = 0, offset = 0;
-            i < blocks.length; time += 30, offset -= 20, i++) {
-      setTimeout(blocks[i].drop.bind(blocks[i], {
+            i < tiles.length; time += 30, offset -= 20, i++) {
+      setTimeout(tiles[i].drop.bind(tiles[i], {
         topOffset: offset + 0,
         onComplete: function () {
           this.canvas.fire("doneDropping");

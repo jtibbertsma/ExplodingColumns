@@ -8,7 +8,7 @@ $(function () {
     this.fallSpeed = options.fallSpeed; // pixels per frame
     this.doneFalling = false;
 
-    this.primaryBlock = new Columns.Block({
+    this.primaryTile = new Columns.Tile({
       color: options.color1,
       top: -40,
       view: this.view,
@@ -16,7 +16,7 @@ $(function () {
       fallSpeed: this.fallSpeed
     });
 
-    this.secondaryBlock = new Columns.Block({
+    this.secondaryTile = new Columns.Tile({
       color: options.color2,
       top: -20,
       view: this.view,
@@ -24,28 +24,28 @@ $(function () {
       fallSpeed: this.fallSpeed
     });
 
-    this.topBlock = this.primaryBlock;
-    this.bottomBlock = this.secondaryBlock;
+    this.topTile = this.primaryTile;
+    this.bottomTile = this.secondaryTile;
 
-    this.leftBlock = null;
-    this.rightBlock = null;
+    this.leftTile = null;
+    this.rightTile = null;
 
     this.orientation = "vertical";
   };
 
   Pair.prototype.canMoveLeft = function () {
     if (this.orientation === "vertical") {
-      return this.bottomBlock.canMoveLeft();
+      return this.bottomTile.canMoveLeft();
     } else {
-      return this.leftBlock.canMoveLeft();
+      return this.leftTile.canMoveLeft();
     }
   };
 
   Pair.prototype.canMoveRight = function () {
     if (this.orientation === "vertical") {
-      return this.bottomBlock.canMoveRight();
+      return this.bottomTile.canMoveRight();
     } else {
-      return this.rightBlock.canMoveRight();
+      return this.rightTile.canMoveRight();
     }
   };
 
@@ -55,52 +55,52 @@ $(function () {
     }
 
     // rotate right
-    if (this.bottomBlock === this.primaryBlock) {
-      return this.primaryBlock.canMoveRight();
+    if (this.bottomTile === this.primaryTile) {
+      return this.primaryTile.canMoveRight();
     }
     // rotate left
     else {
-      return this.primaryBlock.canMoveLeft();
+      return this.primaryTile.canMoveLeft();
     }
   };
 
   Pair.prototype.rotateFromVertical = function () {
-    if (this.bottomBlock === this.primaryBlock) {
-      this.secondaryBlock.moveInDir(1);
-      this.secondaryBlock.jump(20);
+    if (this.bottomTile === this.primaryTile) {
+      this.secondaryTile.moveInDir(1);
+      this.secondaryTile.jump(20);
 
-      this.leftBlock = this.primaryBlock;
-      this.rightBlock = this.secondaryBlock;
+      this.leftTile = this.primaryTile;
+      this.rightTile = this.secondaryTile;
     } else {
-      this.secondaryBlock.moveInDir(-1);
-      this.secondaryBlock.jump(-20);
+      this.secondaryTile.moveInDir(-1);
+      this.secondaryTile.jump(-20);
 
-      this.rightBlock = this.primaryBlock;
-      this.leftBlock = this.secondaryBlock;
+      this.rightTile = this.primaryTile;
+      this.leftTile = this.secondaryTile;
     }
 
-    this.bottomBlock = null;
-    this.topBlock = null;
+    this.bottomTile = null;
+    this.topTile = null;
     this.orientation = 'horizontal';
   };
 
   Pair.prototype.rotateFromHorizontal = function () {
-    if (this.leftBlock === this.primaryBlock) {
-      this.secondaryBlock.jump(20);
-      this.secondaryBlock.moveInDir(-1);
+    if (this.leftTile === this.primaryTile) {
+      this.secondaryTile.jump(20);
+      this.secondaryTile.moveInDir(-1);
 
-      this.topBlock = this.primaryBlock;
-      this.bottomBlock = this.secondaryBlock;
+      this.topTile = this.primaryTile;
+      this.bottomTile = this.secondaryTile;
     } else {
-      this.secondaryBlock.jump(-20);
-      this.secondaryBlock.moveInDir(1);
+      this.secondaryTile.jump(-20);
+      this.secondaryTile.moveInDir(1);
 
-      this.bottomBlock = this.primaryBlock;
-      this.topBlock = this.secondaryBlock;
+      this.bottomTile = this.primaryTile;
+      this.topTile = this.secondaryTile;
     }
 
-    this.leftBlock = null;
-    this.rightBlock = null;
+    this.leftTile = null;
+    this.rightTile = null;
     this.orientation = 'vertical';
   };
 
@@ -114,8 +114,8 @@ $(function () {
 
   Pair.prototype.drop = function () {
     setTimeout(function () {
-      this.view.addToDropQueue(this.bottomBlock || this.leftBlock);
-      this.view.addToDropQueue(this.topBlock || this.rightBlock);
+      this.view.addToDropQueue(this.bottomTile || this.leftTile);
+      this.view.addToDropQueue(this.topTile || this.rightTile);
       this.view.executeDrop();
     }.bind(this), 0);
   };
@@ -125,16 +125,16 @@ $(function () {
     if (this.view.keyPresses.a && this.canMoveLeft()) {
       this.view.keyPresses.a -= 1;
 
-      this.primaryBlock.moveInDir(-1);
-      this.secondaryBlock.moveInDir(-1);
+      this.primaryTile.moveInDir(-1);
+      this.secondaryTile.moveInDir(-1);
     }
 
     // move right
     else if (this.view.keyPresses.d && this.canMoveRight()) {
       this.view.keyPresses.d -= 1;
 
-      this.primaryBlock.moveInDir(1);
-      this.secondaryBlock.moveInDir(1);
+      this.primaryTile.moveInDir(1);
+      this.secondaryTile.moveInDir(1);
     }
 
     // drop
@@ -155,7 +155,7 @@ $(function () {
     }
   };
 
-  // This function is responsible for putting the blocks
+  // This function is responsible for putting the tiles
   // in their proper resting postitions if were done falling.
   // The callback fires an event at the canvas that causes the
   // next iteration of the main game loop to begin.
@@ -167,28 +167,28 @@ $(function () {
     }
 
     if (this.orientation === "vertical") {
-      if (this.bottomBlock.finishedFalling()) {
+      if (this.bottomTile.finishedFalling()) {
         setTimeout(callback, 0);
-        this.bottomBlock.stop();
-        this.topBlock.stop();
+        this.bottomTile.stop();
+        this.topTile.stop();
 
         this.doneFalling = true;
       }
     } else {
-      var left = this.leftBlock.finishedFalling();
-      var right = this.rightBlock.finishedFalling();
+      var left = this.leftTile.finishedFalling();
+      var right = this.rightTile.finishedFalling();
 
       if (left && right) {
         setTimeout(callback, 0);
-        this.leftBlock.stop();
-        this.rightBlock.stop();
+        this.leftTile.stop();
+        this.rightTile.stop();
 
         this.doneFalling = true;
 
       } else if (left) {
-        this.leftBlock.stop();
+        this.leftTile.stop();
         setTimeout(function () {
-          this.rightBlock.drop({
+          this.rightTile.drop({
             onComplete: callback,
             topOffset: 0
           });
@@ -197,9 +197,9 @@ $(function () {
         this.doneFalling = true;
 
       } else if (right) {
-        this.rightBlock.stop();
+        this.rightTile.stop();
         setTimeout(function () {
-          this.leftBlock.drop({
+          this.leftTile.drop({
             onComplete: callback,
             topOffset: 0
           });
@@ -223,8 +223,8 @@ $(function () {
       }.bind(this));
 
       if (!this.doneFalling) {
-        this.primaryBlock.moveDown();
-        this.secondaryBlock.moveDown();
+        this.primaryTile.moveDown();
+        this.secondaryTile.moveDown();
         this.view.canvas.renderAll();
       }
     }.bind(this), 1000 / 60);
