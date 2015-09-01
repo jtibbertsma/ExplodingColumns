@@ -3,22 +3,22 @@ $(function () {
     Columns = {};
   }
 
-  Columns.explodeBlocks = function (view, blocks) {
-    var exploder = new Exploder(view, blocks);
+  Columns.explodeTiles = function (view, tiles) {
+    var exploder = new Exploder(view, tiles);
     exploder.explode();
   };
 
-  var Exploder = function (view, blocks) {
+  var Exploder = function (view, tiles) {
     this.view = view;
     this.columns = view.columns;
-    this.blocks = blocks;
+    this.tiles = tiles;
     this.alreadyChecked = {};
-    this.pendingFlashes = {};
-    this.numPendingExplosions = blocks.length;
+    this.numPendingExplosions = tiles.length;
+    this.explosionIndices = [];
 
-    for (var i = 0; i < this.numPendingExplosions; i++) {
-      this.pendingFlashes[[this.blocks[i].col, this.blocks[i].row]] = 6;
-    }
+    tiles.forEach(function (tile) {
+      this.explosionIndices[[tile.col, tile.row]] = true;
+    }.bind(this));
   };
 
   Exploder.prototype.explode = function () {
@@ -32,24 +32,24 @@ $(function () {
     }.bind(this));
 
     var time = 0;
-    this.blocks.forEach(function (block) {
-      setTimeout(block.explode.bind(block, this.pendingFlashes), time);
+    this.tiles.forEach(function (tile) {
+      setTimeout(tile.explode.bind(tile), time);
       time += 30;
     }.bind(this));
   };
 
   Exploder.prototype.spliceColumns = function () {
     for (var i = 0; i < this.numPendingExplosions; i++) {
-      var col = this.blocks[i].col;
-      var row = this.blocks[i].row;
+      var col = this.tiles[i].col;
+      var row = this.tiles[i].row;
 
-      if (!this.alreadyChecked[[row, col]]) {
+      if (!this.alreadyChecked[[col, row]]) {
         for (var n = row; n < this.columns[col].length; n++) {
           var node = this.columns[col][n];
           var nodeIndex = [node.col, node.row];
 
           this.alreadyChecked[nodeIndex] = true;
-          if (!this.pendingFlashes[nodeIndex]) {
+          if (!this.explosionIndices[nodeIndex]) {
             this.view.addToDropQueue(node);
           }
         }
