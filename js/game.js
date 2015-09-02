@@ -82,17 +82,7 @@ $(function () {
     setTimeout(this.executeDrop.bind(this), 0);
   };
 
-  Game.prototype.nextIteration = function () {
-    this.clearKeyPresses();
-    
-    var tilesToExplode = Columns.searchForExplosions(this);
-
-    if (tilesToExplode.length > 0) {
-      this.combo += 1;
-      Columns.explodeTiles(this, tilesToExplode); // async
-      return;
-    }
-
+  Game.prototype.handleCombo = function () {
     if (this.combo > 1) {
       this.fallSpeed -= 1;
       if (this.fallSpeed < 2) {
@@ -100,18 +90,43 @@ $(function () {
       }
     }
     this.combo = 0;
+  };
 
+  Game.prototype.doNextTurn = function () {
+    this.clearKeyPresses();
+
+    if (++this.turnNumber % 30 === 0) {
+      this.raiseDifficulty();
+    }
+
+    if (this.turnNumber % 10 === 0) {
+      this.avalanch(); // async
+      return;
+    }
+
+    this.nextPair();
+  };
+
+  Game.prototype.maybeExplode = function () {
+    var tilesToExplode = Columns.searchForExplosions(this);
+
+    if (tilesToExplode.length > 0) {
+      this.combo += 1;
+      Columns.explodeTiles(this, tilesToExplode); // async
+      return true;
+    }
+
+    return false;
+  };
+
+  Game.prototype.nextIteration = function () {
+    if (this.maybeExplode()) {
+      return;
+    }
+
+    this.handleCombo();
     if (!this.gameOver()) {
-      if (++this.turnNumber % 30 === 0) {
-        this.raiseDifficulty();
-      }
-
-      if (this.turnNumber % 10 === 0) {
-        this.avalanch(); // async
-        return;
-      }
-
-      this.nextPair();
+      this.doNextTurn();
     } else {
       var callback = this.stopCallback;
       this.canvas.off("nextIteration");
