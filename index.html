@@ -24,7 +24,8 @@
   <script src="js/dropQueue.js"></script>
   <script src="js/search.js"></script>
   <script src="js/explosion.js"></script>
-  <script src="js/gameView.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/view.js"></script>
 </head>
 <body>
   <div class="container-fluid">
@@ -59,8 +60,7 @@
 
   <script>
     $(function () {
-      var view = new Columns.GameView("canvas", 460, 500);
-      view.createWelcomePane();
+      new Columns.View("canvas", 460, 500);
     });
   </script>
 </body>

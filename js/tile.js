@@ -1,6 +1,6 @@
 $(function () {
   if (typeof Columns === "undefined") {
-    window.Columns = {};
+    Columns = {};
   }
 
   var Tile = Columns.Tile = function (options) {
