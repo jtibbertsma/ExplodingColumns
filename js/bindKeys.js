@@ -5,6 +5,7 @@ $(function () {
 
   Columns.bindKeys = function (keyPresses) {
     $(document).on("keypress", function (event) {
+      event.preventDefault();
       var code = event.keyCode;
 
       switch (code) {
