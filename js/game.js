@@ -7,6 +7,9 @@ $(function () {
     this.canvas = options.canvas;
     this.canvas.clear();
 
+    this.stopCallback = options.stopCallback;
+
+    this.keyPresses = options.keyPresses;
     this.numberToExplode = 4;
     this.avalanchRows = 1;
 
@@ -70,7 +73,7 @@ $(function () {
             color: 'gray',
             top: -20 - (i * 20),
             col: j,
-            view: this
+            game: this
           }));
         }
       }
@@ -110,25 +113,21 @@ $(function () {
 
       this.nextPair();
     } else {
+      var callback = this.stopCallback;
       this.canvas.off("nextIteration");
-      this.$transparent.removeClass("invisible");
 
-      setTimeout(function () {
-        this.$overlay.append($("<h3 class=\"game-over\">Game Over</h3>"));
-
-        this.makeOverlayButton("Play Again?");
-      }.bind(this), 1000);
+      callback("Game Over", "Play Again?");
     }
   };
 
   Game.prototype.nextPair = function () {
     this.currentPair = new Columns.Pair({
-      view: this,
+      game: this,
       color1: this.randomColor(),
       color2: this.randomColor(),
       startCol: this.startCol,
       fallSpeed: this.fallSpeed
     });
-    currentPair.fall();
+    this.currentPair.fall();
   };
 });

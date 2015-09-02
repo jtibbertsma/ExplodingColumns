@@ -7,7 +7,7 @@ $(function () {
     this.color = options.color;
     this.dropSpeed = 0.3;
     this.fallSpeed = options.fallSpeed;
-    this.view = options.view;
+    this.game = options.game;
     this.col = options.col;
 
     this.rect = new fabric.Rect({
@@ -19,13 +19,13 @@ $(function () {
     });
 
     this.fallTo = this.calculateFallTo();
-    this.view.canvas.add(this.rect);
+    this.game.canvas.add(this.rect);
   };
 
   Tile.prototype.canMoveLeft = function () {
     var _canMove = this.canMove(-1);
     if (!_canMove) {
-      this.view.keyPresses.a = 0;
+      this.game.keyPresses.a = 0;
     }
 
     return _canMove;
@@ -34,7 +34,7 @@ $(function () {
   Tile.prototype.canMoveRight = function () {
     var _canMove = this.canMove(1);
     if (!_canMove) {
-      this.view.keyPresses.d = 0;
+      this.game.keyPresses.d = 0;
     }
 
     return _canMove;
@@ -43,12 +43,12 @@ $(function () {
   Tile.prototype.canMove = function(dir) {
     var newCol = this.col + dir;
 
-    if (newCol < 0 || newCol >= this.view.columns.length) {
+    if (newCol < 0 || newCol >= this.game.columns.length) {
       return false;
     }
 
     var bottomHeight = this.rect.top + 20;
-    var colHeight = this.view.height - this.view.columns[newCol].length * 20;
+    var colHeight = this.game.canvas.height - this.game.columns[newCol].length * 20;
 
     return bottomHeight < colHeight;
   };
@@ -75,8 +75,8 @@ $(function () {
   Tile.prototype.stop = function () {
     this.fallTo = this.calculateFallTo();
     this.rect.set('top', this.fallTo);
-    this.view.columns[this.col].push(this);
-    this.row = this.view.columns[this.col].length - 1;
+    this.game.columns[this.col].push(this);
+    this.row = this.game.columns[this.col].length - 1;
   };
 
   Tile.prototype.moveDown = function () {
@@ -84,8 +84,8 @@ $(function () {
   };
 
   Tile.prototype.calculateFallTo = function () {
-    var tilesInCol = this.view.columns[this.col].length;
-    return (this.view.height - 20) - tilesInCol * 20;
+    var tilesInCol = this.game.columns[this.col].length;
+    return (this.game.canvas.height - 20) - tilesInCol * 20;
   };
 
   Tile.prototype.explode = function () {
@@ -96,10 +96,10 @@ $(function () {
       this.rect.set('fill', this.rect.fill === color ? "white" : color);
       if (--numFlashes === 0) {
         clearInterval(this._flashInterval);
-        this.view.canvas.remove(this.rect);
-        this.view.canvas.fire("doneExploding");
+        this.game.canvas.remove(this.rect);
+        this.game.canvas.fire("doneExploding");
       }
-      this.view.canvas.renderAll();
+      this.game.canvas.renderAll();
     }.bind(this), 40);
   };
 
@@ -113,7 +113,7 @@ $(function () {
 
     this.rect.animate("top", this.fallTo + options.topOffset, {
       duration: duration,
-      onChange: this.view.canvas.renderAll.bind(this.view.canvas),
+      onChange: this.game.canvas.renderAll.bind(this.game.canvas),
       easing: fabric.util.ease.easeOutBounce,
       onComplete: function () {
         this.stop();

@@ -35,7 +35,7 @@ $(function () {
 
   View.prototype.hideOverlay = function () {
     this.$overlay.html("");
-    this.$transparent.removeClass("invisible");
+    this.$transparent.addClass("invisible");
   };
 
   View.prototype.showOverlay = function () {
@@ -53,7 +53,7 @@ $(function () {
   };
 
   View.prototype.buildOverlayHeader = function (text) {
-    return $("<h3>").addClass("overlay-header").text(headerText);
+    return $("<h3>").addClass("overlay-header").text(text);
   };
 
   View.prototype.buildOverlayButton = function (text) {
@@ -72,12 +72,21 @@ $(function () {
     return $button;
   };
 
+  View.prototype.stopCallback = function (headerText, buttonText) {
+    this.showOverlay();
+
+    setTimeout(function () {
+      this.addOverlayContent(headerText, buttonText);
+    }.bind(this), 1000);
+  };
+
   View.prototype.start = function () {
     this.hideOverlay();
 
     this.game = new Columns.Game({
       canvas: this.canvas,
-      keyPresses: this.keyPresses
+      keyPresses: this.keyPresses,
+      stopCallback: this.stopCallback.bind(this)
     });
 
     this.game.play();

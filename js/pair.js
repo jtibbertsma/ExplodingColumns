@@ -4,14 +4,14 @@ $(function () {
   }
 
   var Pair = Columns.Pair = function (options) {
-    this.view = options.view;
+    this.game = options.game;
     this.fallSpeed = options.fallSpeed; // pixels per frame
     this.doneFalling = false;
 
     this.primaryTile = new Columns.Tile({
       color: options.color1,
       top: -40,
-      view: this.view,
+      game: this.game,
       col: options.startCol,
       fallSpeed: this.fallSpeed
     });
@@ -19,7 +19,7 @@ $(function () {
     this.secondaryTile = new Columns.Tile({
       color: options.color2,
       top: -20,
-      view: this.view,
+      game: this.game,
       col: options.startCol,
       fallSpeed: this.fallSpeed
     });
@@ -114,43 +114,43 @@ $(function () {
 
   Pair.prototype.drop = function () {
     setTimeout(function () {
-      this.view.addToDropQueue(this.bottomTile || this.leftTile);
-      this.view.addToDropQueue(this.topTile || this.rightTile);
-      this.view.executeDrop();
+      this.game.addToDropQueue(this.bottomTile || this.leftTile);
+      this.game.addToDropQueue(this.topTile || this.rightTile);
+      this.game.executeDrop();
     }.bind(this), 0);
   };
 
   Pair.prototype.executePendingActions = function () {
     // move left
-    if (this.view.keyPresses.a && this.canMoveLeft()) {
-      this.view.keyPresses.a -= 1;
+    if (this.game.keyPresses.a && this.canMoveLeft()) {
+      this.game.keyPresses.a -= 1;
 
       this.primaryTile.moveInDir(-1);
       this.secondaryTile.moveInDir(-1);
     }
 
     // move right
-    else if (this.view.keyPresses.d && this.canMoveRight()) {
-      this.view.keyPresses.d -= 1;
+    else if (this.game.keyPresses.d && this.canMoveRight()) {
+      this.game.keyPresses.d -= 1;
 
       this.primaryTile.moveInDir(1);
       this.secondaryTile.moveInDir(1);
     }
 
     // drop
-    else if (this.view.keyPresses.s) {
+    else if (this.game.keyPresses.s) {
       this.killInterval = true;
       this.drop();
     }
 
     // rotate
-    else if (this.view.keyPresses.w) {
+    else if (this.game.keyPresses.w) {
       if (this.canRotate()) {
-        this.view.keyPresses.w -= 1;
+        this.game.keyPresses.w -= 1;
 
         this.rotate();
       } else {
-        this.view.keyPresses.w = 0;
+        this.game.keyPresses.w = 0;
       }
     }
   };
@@ -219,13 +219,13 @@ $(function () {
       this.executePendingActions();
 
       this.stopIfFinished(function () {
-        this.view.canvas.fire("nextIteration");
+        this.game.canvas.fire("nextIteration");
       }.bind(this));
 
       if (!this.doneFalling) {
         this.primaryTile.moveDown();
         this.secondaryTile.moveDown();
-        this.view.canvas.renderAll();
+        this.game.canvas.renderAll();
       }
     }.bind(this), 1000 / 60);
   };
