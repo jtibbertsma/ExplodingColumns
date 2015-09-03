@@ -9,6 +9,7 @@ $(function () {
     this.fallSpeed = options.fallSpeed;
     this.game = options.game;
     this.col = options.col;
+    this.canvas = this.game.canvas;
 
     this.rect = new fabric.Rect({
       top: options.top,
@@ -19,7 +20,7 @@ $(function () {
     });
 
     this.fallTo = this.calculateFallTo();
-    this.game.canvas.add(this.rect);
+    this.canvas.add(this.rect);
   };
 
   Tile.prototype.canMoveLeft = function () {
@@ -48,7 +49,7 @@ $(function () {
     }
 
     var bottomHeight = this.rect.top + 20;
-    var colHeight = this.game.canvas.height - this.game.columns[newCol].length * 20;
+    var colHeight = this.canvas.height - this.game.columns[newCol].length * 20;
 
     return bottomHeight < colHeight;
   };
@@ -85,7 +86,7 @@ $(function () {
 
   Tile.prototype.calculateFallTo = function () {
     var tilesInCol = this.game.columns[this.col].length;
-    return (this.game.canvas.height - 20) - tilesInCol * 20;
+    return (this.canvas.height - 20) - tilesInCol * 20;
   };
 
   Tile.prototype.explode = function () {
@@ -96,10 +97,10 @@ $(function () {
       this.rect.set('fill', this.rect.fill === color ? "white" : color);
       if (--numFlashes === 0) {
         clearInterval(this._flashInterval);
-        this.game.canvas.remove(this.rect);
-        this.game.canvas.fire("doneExploding");
+        this.canvas.remove(this.rect);
+        this.canvas.fire("doneExploding");
       }
-      this.game.canvas.renderAll();
+      this.canvas.renderAll();
     }.bind(this), 40);
   };
 
@@ -113,7 +114,7 @@ $(function () {
 
     this.rect.animate("top", this.fallTo + options.topOffset, {
       duration: duration,
-      onChange: this.game.canvas.renderAll.bind(this.game.canvas),
+      onChange: this.canvas.renderAll.bind(this.canvas),
       easing: fabric.util.ease.easeOutBounce,
       onComplete: function () {
         this.stop();

@@ -167,51 +167,54 @@ $(function () {
     }
 
     if (this.orientation === "vertical") {
-      if (this.bottomTile.finishedFalling()) {
-        setTimeout(callback, 0);
-        this.bottomTile.stop();
-        this.topTile.stop();
-
-        this.doneFalling = true;
-      }
+      this.verticalCheck(callback);
     } else {
-      var left = this.leftTile.finishedFalling();
-      var right = this.rightTile.finishedFalling();
-
-      if (left && right) {
-        setTimeout(callback, 0);
-        this.leftTile.stop();
-        this.rightTile.stop();
-
-        this.doneFalling = true;
-
-      } else if (left) {
-        this.leftTile.stop();
-        setTimeout(function () {
-          this.rightTile.drop({
-            onComplete: callback,
-            topOffset: 0
-          });
-        }.bind(this), 150);
-
-        this.doneFalling = true;
-
-      } else if (right) {
-        this.rightTile.stop();
-        setTimeout(function () {
-          this.leftTile.drop({
-            onComplete: callback,
-            topOffset: 0
-          });
-        }.bind(this), 150);
-
-        this.doneFalling = true;
-      }
+      this.horizontalCheck(callback);
     }
 
     if (this.doneFalling) {
       clearInterval(this._interval);
     }
+  };
+
+  Pair.prototype.verticalCheck = function (callback) {
+    if (this.bottomTile.finishedFalling()) {
+      setTimeout(callback, 0);
+      this.bottomTile.stop();
+      this.topTile.stop();
+
+      this.doneFalling = true;
+    }
+  };
+
+  Pair.prototype.horizontalCheck = function (callback) {
+    var left = this.leftTile.finishedFalling();
+    var right = this.rightTile.finishedFalling();
+
+    if (left && right) {
+      setTimeout(callback, 0);
+      this.leftTile.stop();
+      this.rightTile.stop();
+
+      this.doneFalling = true;
+
+    } else if (left) {
+      this.breakPair(this.rightTile, this.leftTile, callback);
+    } else if (right) {
+      this.breakPair(this.leftTile, this.rightTile, callback);
+    }
+  };
+
+  Pair.prototype.breakPair = function (dropTile, stopTile, callback) {
+    stopTile.stop();
+    setTimeout(function () {
+      dropTile.drop({
+        onComplete: callback,
+        topOffset: 0
+      });
+    }.bind(this), 150);
+
+    this.doneFalling = true;
   };
 
   Pair.prototype.fall = function () {
