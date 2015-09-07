@@ -199,7 +199,7 @@ $(function () {
         onComplete: callback,
         topOffset: 0
       });
-    }.bind(this), 150);
+    }, 150);
 
     this.doneDescending = true;
   };
