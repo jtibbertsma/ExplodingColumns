@@ -8,6 +8,7 @@ $(function () {
     this.canvas.clear();
 
     this.stopCallback = options.stopCallback;
+    this.iterationCallback = this.nextIteration.bind(this);
 
     this.keyPresses = options.keyPresses;
     this.numberToExplode = 4;
@@ -18,7 +19,7 @@ $(function () {
     this.colors = ['red', 'blue', 'green', 'orange', 'purple', 'yellow'];
 
     this.dropQueue = new Columns.DropQueue({
-      onComplete: this.nextIteration.bind(this)
+      onComplete: this.iterationCallback
     });
   };
 
@@ -191,14 +192,13 @@ $(function () {
         clearInterval(this.descentInterval);
       }
 
-      else if (this.pair.canDescend()) {
+      else if (this.pair.canDescend(this.iterationCallback)) {
         this.pair.moveDown();
         this.canvas.renderAll();
       }
 
       else {
         clearInterval(this.descentInterval);
-        setTimeout(this.nextIteration.bind(this), 0);
       }
     }.bind(this), 1000 / 60);
   };
