@@ -41,7 +41,7 @@ $(function () {
       this.columns.push([]);
     }
 
-    this.fallSpeed = 2;
+    this.descentSpeed = 2;
     this.turnNumber = 0;
     this.combo = 0;
 
@@ -62,7 +62,7 @@ $(function () {
 
   Game.prototype.raiseDifficulty = function () {
     // this.avalanchRows++;
-    this.fallSpeed++;
+    this.descentSpeed++;
   };
 
   Game.prototype.avalanch = function () {
@@ -119,9 +119,9 @@ $(function () {
 
   Game.prototype.handleCombo = function () {
     if (this.combo > 1) {
-      this.fallSpeed -= 1;
-      if (this.fallSpeed < 2) {
-        this.fallSpeed = 2;
+      this.descentSpeed -= 1;
+      if (this.descentSpeed < 2) {
+        this.descentSpeed = 2;
       }
     }
     this.combo = 0;
@@ -183,11 +183,11 @@ $(function () {
   };
 
   Game.prototype.descend = function () {
-    this.fallInterval = setInterval(function () {
+    this.descentInterval = setInterval(function () {
       this.executePendingActions();
 
       if (this.killInterval) {
-        clearInterval(this.fallInterval);
+        clearInterval(this.descentInterval);
       }
 
       else if (this.pair.canDescend()) {
@@ -196,7 +196,7 @@ $(function () {
       }
 
       else {
-        clearInterval(this.fallInterval);
+        clearInterval(this.descentInterval);
       }
     }.bind(this), 1000 / 60);
   };
