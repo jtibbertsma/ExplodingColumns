@@ -17,7 +17,9 @@ $(function () {
     this.startCol = Math.floor(this.numColumns / 2);
     this.colors = ['red', 'blue', 'green', 'orange', 'purple', 'yellow'];
 
-    this.dropQueue = new Columns.DropQueue(this);
+    this.dropQueue = new Columns.DropQueue({
+      onComplete: this.nextIteration.bind(this)
+    });
   };
 
   Game.prototype.clearKeyPresses = function () {
@@ -32,8 +34,6 @@ $(function () {
   };
 
   Game.prototype.play = function () {
-    this.canvas.on("nextIteration", this.nextIteration.bind(this));
-
     this.clearKeyPresses();
     this.columns = [];
 
@@ -155,6 +155,8 @@ $(function () {
   };
 
   Game.prototype.nextIteration = function () {
+    this.killInterval = false;
+
     if (this.maybeExplode()) {
       return;
     }
@@ -164,7 +166,6 @@ $(function () {
       this.doNextTurn();
     } else {
       var callback = this.stopCallback;
-      this.canvas.off("nextIteration");
 
       callback("Game Over", "Play Again?");
     }
@@ -197,6 +198,7 @@ $(function () {
 
       else {
         clearInterval(this.descentInterval);
+        setTimeout(this.nextIteration.bind(this), 0);
       }
     }.bind(this), 1000 / 60);
   };
