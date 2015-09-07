@@ -6,7 +6,7 @@ $(function () {
   var Tile = Columns.Tile = function (options) {
     this.color = options.color;
     this.dropSpeed = 0.3;
-    this.fallSpeed = options.fallSpeed;
+    this.descentSpeed = options.descentSpeed;
     this.game = options.game;
     this.col = options.col;
     this.canvas = this.game.canvas;
@@ -19,7 +19,7 @@ $(function () {
       fill: this.color
     });
 
-    this.fallTo = this.calculateFallTo();
+    this.descendTo = this.calculateDescendTo();
     this.canvas.add(this.rect);
   };
 
@@ -57,12 +57,12 @@ $(function () {
   Tile.prototype.moveInDir = function (dir) {
     this.col += dir;
     this.rect.set({left: this.col * 20});
-    this.fallTo = this.calculateFallTo();
+    this.descendTo = this.calculateDescendTo();
   };
 
-  Tile.prototype.finishedFalling = function () {
-    // this.fallTo = this.calculateFallTo();
-    if (this.rect.top > this.fallTo) {
+  Tile.prototype.finishedDescending = function () {
+    // this.descendTo = this.calculateDescendTo();
+    if (this.rect.top > this.descendTo) {
       return true;
     }
 
@@ -74,17 +74,17 @@ $(function () {
   };
 
   Tile.prototype.stop = function () {
-    this.fallTo = this.calculateFallTo();
-    this.rect.set('top', this.fallTo);
+    this.descendTo = this.calculateDescendTo();
+    this.rect.set('top', this.descendTo);
     this.game.columns[this.col].push(this);
     this.row = this.game.columns[this.col].length - 1;
   };
 
   Tile.prototype.moveDown = function () {
-    this.rect.set('top', this.rect.top + this.fallSpeed);
+    this.rect.set('top', this.rect.top + this.descentSpeed);
   };
 
-  Tile.prototype.calculateFallTo = function () {
+  Tile.prototype.calculateDescendTo = function () {
     var tilesInCol = this.game.columns[this.col].length;
     return (this.canvas.height - 20) - tilesInCol * 20;
   };
@@ -105,14 +105,14 @@ $(function () {
   };
 
   Tile.prototype.drop = function (options) {
-    this.fallTo = this.calculateFallTo();
+    this.descendTo = this.calculateDescendTo();
 
     var callback = options.onComplete;
-    var distance = (this.fallTo + options.topOffset) - this.rect.top;
+    var distance = (this.descendTo + options.topOffset) - this.rect.top;
 
     var duration = distance / this.dropSpeed;
 
-    this.rect.animate("top", this.fallTo + options.topOffset, {
+    this.rect.animate("top", this.descendTo + options.topOffset, {
       duration: duration,
       onChange: this.canvas.renderAll.bind(this.canvas),
       easing: fabric.util.ease.easeOutBounce,

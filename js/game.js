@@ -82,6 +82,41 @@ $(function () {
     setTimeout(this.executeDrop.bind(this), 0);
   };
 
+  Game.prototype.executePendingActions = function () {
+    if (this.keyPresses.p) {
+
+    }
+
+    else if (this.keyPresses.a) {
+      if (this.pair.maybeMoveLeft()) {
+        this.keyPresses.a -= 1;
+      } else {
+        this.keyPresses.a = 0;
+      }
+    }
+
+    else if (this.keyPresses.d) {
+      if (this.pair.maybeMoveRight()) {
+        this.keyPresses.d -= 1;
+      } else {
+        this.keyPresses.d = 0;
+      }
+    }
+
+    else if (this.keyPresses.s) {
+      this.killInterval = true;
+      this.pair.drop();
+    }
+
+    else if (this.keyPresses.w) {
+      if (this.pair.maybeRotate()) {
+        this.keyPresses.w -= 1;
+      } else {
+        this.keyPresses.w = 0;
+      }
+    }
+  };
+
   Game.prototype.handleCombo = function () {
     if (this.combo > 1) {
       this.fallSpeed -= 1;
@@ -136,13 +171,33 @@ $(function () {
   };
 
   Game.prototype.nextPair = function () {
-    this.currentPair = new Columns.Pair({
+    this.pair = new Columns.Pair({
       game: this,
       color1: this.randomColor(),
       color2: this.randomColor(),
       startCol: this.startCol,
-      fallSpeed: this.fallSpeed
+      descentSpeed: this.descentSpeed
     });
-    this.currentPair.fall();
+
+    this.descend();
+  };
+
+  Game.prototype.descend = function () {
+    this.fallInterval = setInterval(function () {
+      this.executePendingActions();
+
+      if (this.killInterval) {
+        clearInterval(this.fallInterval);
+      }
+
+      else if (this.pair.canDescend()) {
+        this.pair.moveDown();
+        this.canvas.renderAll();
+      }
+
+      else {
+        clearInterval(this.fallInterval);
+      }
+    }.bind(this), 1000 / 60);
   };
 });
