@@ -63,8 +63,6 @@ $(function () {
       .addClass("overlay-btn")
       .text(text);
 
-    this.$overlay.append($button);
-
     $button.one("click", function () {
       this.start();
     }.bind(this));
