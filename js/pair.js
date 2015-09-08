@@ -194,12 +194,10 @@ $(function () {
 
   Pair.prototype.breakPair = function (dropTile, stopTile, callback) {
     stopTile.stop();
-    setTimeout(function () {
-      dropTile.drop({
-        onComplete: callback,
-        topOffset: 0
-      });
-    }, 150);
+    setTimeout(dropTile.drop.bind(dropTile, {
+      onComplete: callback,
+      topOffset: 0
+    }), 150);
 
     this.doneDescending = true;
   };
