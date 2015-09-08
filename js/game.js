@@ -166,9 +166,7 @@ $(function () {
     if (!this.gameOver()) {
       this.doNextTurn();
     } else {
-      var callback = this.stopCallback;
-
-      callback("Game Over", "Play Again?");
+      this.stopCallback("Game Over", "Play Again?");
     }
   };
 
