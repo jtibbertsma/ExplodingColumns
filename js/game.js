@@ -36,6 +36,7 @@ $(function () {
 
   Game.prototype.play = function () {
     this.clearKeyPresses();
+    this.keyPresses.p = 0;
     this.columns = [];
 
     for (i = 0; i < this.numColumns; i++) {
@@ -47,6 +48,13 @@ $(function () {
     this.combo = 0;
 
     this.nextPair();
+  };
+
+  Game.prototype.unpause = function () {
+    this.paused = false;
+    this.killInterval = false;
+    this.keyPresses.p = 0;
+    this.descend();
   };
 
   Game.prototype.gameOver = function () {
@@ -85,7 +93,9 @@ $(function () {
 
   Game.prototype.executePendingActions = function () {
     if (this.keyPresses.p) {
-
+      this.paused = true;
+      this.killInterval = true;
+      this.stopCallback("Paused", "Unpause");
     }
 
     else if (this.keyPresses.a) {
@@ -128,21 +138,6 @@ $(function () {
     this.combo = 0;
   };
 
-  Game.prototype.doNextTurn = function () {
-    this.clearKeyPresses();
-
-    if (++this.turnNumber % 30 === 0) {
-      this.raiseDifficulty();
-    }
-
-    if (this.turnNumber % 10 === 0) {
-      this.avalanch(); // async
-      return;
-    }
-
-    this.nextPair();
-  };
-
   Game.prototype.maybeExplode = function () {
     var tilesToExplode = Columns.searchForExplosions(this);
 
@@ -164,10 +159,25 @@ $(function () {
 
     this.handleCombo();
     if (!this.gameOver()) {
-      this.doNextTurn();
+      this.nextTurn();
     } else {
       this.stopCallback("Game Over", "Play Again?");
     }
+  };
+
+  Game.prototype.nextTurn = function () {
+    this.clearKeyPresses();
+
+    if (++this.turnNumber % 30 === 0) {
+      this.raiseDifficulty();
+    }
+
+    if (this.turnNumber % 10 === 0) {
+      this.avalanch(); // async
+      return;
+    }
+
+    this.nextPair();
   };
 
   Game.prototype.nextPair = function () {

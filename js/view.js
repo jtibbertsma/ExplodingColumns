@@ -13,7 +13,7 @@ $(function () {
     this.canvas.setWidth(width);
     this.canvas.setHeight(height);
 
-    this.keyPresses = {};
+    this.keyPresses = { p: 0, a: 0, w: 0, s: 0, d: 0 };
 
     Columns.bindKeys(this.keyPresses);
 
@@ -81,12 +81,16 @@ $(function () {
   View.prototype.start = function () {
     this.hideOverlay();
 
-    this.game = new Columns.Game({
-      canvas: this.canvas,
-      keyPresses: this.keyPresses,
-      stopCallback: this.stopCallback.bind(this)
-    });
+    if (this.game && this.game.paused) {
+      this.game.unpause();
+    } else {
+      this.game = new Columns.Game({
+        canvas: this.canvas,
+        keyPresses: this.keyPresses,
+        stopCallback: this.stopCallback.bind(this)
+      });
 
-    this.game.play();
+      this.game.play();
+    }
   };
 });
