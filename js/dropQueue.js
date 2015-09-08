@@ -3,9 +3,8 @@ $(function () {
     Columns = {};
   }
 
-  var DropQueue = Columns.DropQueue = function (view) {
-    this.canvas = view.canvas;
-    this.view = view;
+  var DropQueue = Columns.DropQueue = function (options) {
+    this.onComplete = options.onComplete;
     this._dropQueue = {};
   };
 
@@ -19,7 +18,6 @@ $(function () {
 
   DropQueue.prototype.executeDrop = function () {
     var keys = this.getDropOrder(Object.keys(this._dropQueue));
-    this.canvas.on("doneDropping", this.doneDropping.bind(this));
     this._pending = 0;
 
     for (var time = 0, i = 0; i < keys.length; time += 50, i++) {
@@ -27,9 +25,9 @@ $(function () {
       this._pending += this._dropQueue[keys[i]].length;
     }
 
+    // In case executeDrop is called on an empty dropQueue
     if (this._pending === 0) {
-      this.canvas.off("doneDropping");
-      this.canvas.fire("nextIteration");
+      this.onComplete();
     }
   };
 
@@ -37,10 +35,8 @@ $(function () {
     for (var time = 0, i = 0, offset = 0;
             i < tiles.length; time += 30, offset -= 20, i++) {
       setTimeout(tiles[i].drop.bind(tiles[i], {
-        topOffset: offset + 0,
-        onComplete: function () {
-          this.canvas.fire("doneDropping");
-        }.bind(this)
+        topOffset: offset,
+        onComplete: this.doneDropping.bind(this)
       }), time);
     }
   };
@@ -61,9 +57,8 @@ $(function () {
 
   DropQueue.prototype.doneDropping = function () {
     if (--this._pending === 0) {
-      this.canvas.off("doneDropping");
       this._dropQueue = {};
-      this.canvas.fire("nextIteration");
+      this.onComplete();
     }
   };
 });

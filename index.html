@@ -12,7 +12,7 @@
 
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
+  <link rel="shortcut icon" href="http://img.brothersoft.com/icon/softimage/p/photo_explosion_deluxe-61138.jpeg" type="image/jpeg">
   
   <link rel="stylesheet" href="css/app.css">
 
@@ -24,7 +24,8 @@
   <script src="js/dropQueue.js"></script>
   <script src="js/search.js"></script>
   <script src="js/explosion.js"></script>
-  <script src="js/gameView.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/view.js"></script>
 </head>
 <body>
   <div class="container-fluid">
@@ -38,6 +39,7 @@
           <li>d: move right</li>
           <li>w: rotate</li>
           <li>s: drop</li>
+          <li>p: pause</li>
         </ul>
 
         <h3>Instructions</h3>
@@ -59,8 +61,7 @@
 
   <script>
     $(function () {
-      var view = new Columns.GameView("canvas", 460, 500);
-      view.createWelcomePane();
+      new Columns.View("canvas", 460, 500);
     });
   </script>
 </body>

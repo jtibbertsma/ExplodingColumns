@@ -11,7 +11,7 @@ h2.header {
   margin-bottom: 40px;
 }
 
-.overlay {
+.transparent {
   position: absolute;
   z-index: 1;
   width: 100%;
@@ -21,7 +21,7 @@ h2.header {
   transition: opacity 1s linear;
 }
 
-.outer-overlay {
+.overlay {
   position: absolute;
   z-index: 2;
   width: 100%;
@@ -38,7 +38,7 @@ h2.header {
   left: 40%;
 }
 
-.game-over {
+.overlay-header {
   margin-bottom: 375px;
   font-size: 30px;
   text-align: center;
