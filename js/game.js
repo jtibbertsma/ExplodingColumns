@@ -144,6 +144,7 @@ $(function () {
     var tilesToExplode = Columns.searchForExplosions(this);
 
     if (tilesToExplode.length > 0) {
+      this.exploderCount += tilesToExplode.length;
       this.combo += 1;
       Columns.explodeTiles(this, tilesToExplode); // async
       return true;
@@ -152,14 +153,19 @@ $(function () {
     return false;
   };
 
+  Game.prototype.calculateScore = function () {
+    var score = 
+  };
+
   Game.prototype.nextIteration = function () {
     this.killInterval = false;
 
     if (this.maybeExplode()) {
+      this.calculateScore();
+      this.handleCombo();
       return;
     }
 
-    this.handleCombo();
     if (!this.gameOver()) {
       this.nextTurn();
     } else {
