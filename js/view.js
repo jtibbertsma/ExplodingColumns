@@ -73,6 +73,10 @@ $(function () {
     this.showOverlay();
     this.clock.stop();
 
+    if (!this.game.paused) {
+      this.clock.finalCountdown();
+    }
+
     setTimeout(function () {
       this.addOverlayContent(headerText, buttonText);
     }.bind(this), 1000);
@@ -84,25 +88,28 @@ $(function () {
 
   View.prototype.start = function () {
     this.hideOverlay();
+    this.clock && this.clock.stop();
 
-    if (this.game && this.game.paused) {
-      this.clock.start();
-      this.game.unpause();
-    } else {
-      this.game = new Columns.Game({
-        canvas: this.canvas,
-        keyPresses: this.keyPresses,
-        stopCallback: this.stopCallback.bind(this),
-        updateScoreCallback: this.updateScoreCallback.bind(this)
-      });
+    setTimeout(function () {
+      if (this.game && this.game.paused) {
+        this.clock.start();
+        this.game.unpause();
+      } else {
+        this.game = new Columns.Game({
+          canvas: this.canvas,
+          keyPresses: this.keyPresses,
+          stopCallback: this.stopCallback.bind(this),
+          updateScoreCallback: this.updateScoreCallback.bind(this)
+        });
 
-      this.clock = new Columns.Clock({
-        game: this.game,
-        clockSelector: "#clock"
-      });
+        this.clock = new Columns.Clock({
+          game: this.game,
+          clockSelector: "#clock"
+        });
 
-      this.clock.start();
-      this.game.play();
-    }
+        this.clock.start();
+        this.game.play();
+      }
+    }.bind(this), 0);
   };
 });

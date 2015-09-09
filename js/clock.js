@@ -10,15 +10,15 @@ $(function () {
     this.setClock();
   };
 
-  Clock.prototype.format = function () {
-    var minutes = Math.floor(this.game.countdown / 60);
-    var seconds = this.game.countdown % 60;
+  Clock.prototype.format = function (time) {
+    var minutes = Math.floor(time / 60);
+    var seconds = time % 60;
 
     return "" + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
   };
 
-  Clock.prototype.setClock = function () {
-    this.$clock.text(this.format());
+  Clock.prototype.setClock = function (time) {
+    this.$clock.text(this.format(time || this.game.countdown));
   };
 
   Clock.prototype.tick = function () {
@@ -26,6 +26,22 @@ $(function () {
       --this.game.countdown;
       this.setClock();
     }
+  };
+
+  Clock.prototype.finalCountdown = function () {
+    var score = this.game.score;
+    var countdown = this.game.countdown;
+    this.game.score += this.game.countdown;
+    this.game.countdown = 0;
+
+    this.interval = setInterval(function () {
+      this.setClock(--countdown);
+      $("#score").text(++score);
+
+      if (countdown === 0) {
+        this.stop();
+      }
+    }.bind(this), 1000 / 15)
   };
 
   Clock.prototype.start = function () {
