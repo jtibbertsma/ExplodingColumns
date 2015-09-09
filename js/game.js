@@ -74,9 +74,17 @@ $(function () {
     this.dropQueue.executeDrop();
   };
 
+  Game.prototype.lowerDifficulty = function () {
+    if (this.descentSpeed > 2) {
+      this.descentSpeed--;
+      this.countdown -= 60;
+    }
+  };
+
   Game.prototype.raiseDifficulty = function () {
     // this.avalanchRows++;
     this.descentSpeed++;
+    this.countdown = 46;
   };
 
   Game.prototype.avalanch = function () {
@@ -159,10 +167,8 @@ $(function () {
 
   Game.prototype.handleCombo = function () {
     if (this.combo > 1) {
-      this.descentSpeed -= 1;
-      if (this.descentSpeed < 2) {
-        this.descentSpeed = 2;
-      }
+      this.countdown += 30 * this.combo;
+      this.lowerDifficulty();
     }
     this.combo = 0;
   };
@@ -187,8 +193,9 @@ $(function () {
 
   Game.prototype.nextTurn = function () {
     this.clearKeyPresses();
+    ++this.turnNumber;
 
-    if (++this.turnNumber % 30 === 0) {
+    if (this.countdown == 0) {
       this.raiseDifficulty();
     }
 
