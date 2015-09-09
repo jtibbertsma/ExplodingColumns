@@ -74,7 +74,13 @@
 
   <script>
     $(function () {
-      new Columns.View("mainCanvas", 460, 500);
+      new Columns.View({
+        canvasId: "mainCanvas",
+        width: 460,
+        height: 500,
+        scoreSelector: "#score",
+        clockSelector: "#clock"
+      });
     });
   </script>
 </body>
