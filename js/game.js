@@ -22,6 +22,18 @@ $(function () {
     this.dropQueue = new Columns.DropQueue({
       onComplete: this.iterationCallback
     });
+
+    this.clearKeyPresses();
+    this.keyPresses.p = 0;
+    this.columns = [];
+
+    for (i = 0; i < this.numColumns; i++) {
+      this.columns.push([]);
+    }
+
+    this.descentSpeed = 2;
+    this.turnNumber = 0;
+    this.combo = 0;
   };
 
   Game.prototype.clearKeyPresses = function () {
@@ -36,17 +48,6 @@ $(function () {
   };
 
   Game.prototype.play = function () {
-    this.clearKeyPresses();
-    this.keyPresses.p = 0;
-    this.columns = [];
-
-    for (i = 0; i < this.numColumns; i++) {
-      this.columns.push([]);
-    }
-
-    this.descentSpeed = 2;
-    this.turnNumber = 0;
-    this.combo = 0;
     this.score = 0;
     this.updateScoreCallback();
 
