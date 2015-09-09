@@ -8,6 +8,7 @@ $(function () {
     this.canvas.clear();
 
     this.stopCallback = options.stopCallback;
+    this.updateScoreCallback = options.updateScoreCallback;
     this.iterationCallback = this.nextIteration.bind(this);
 
     this.keyPresses = options.keyPresses;
@@ -21,6 +22,20 @@ $(function () {
     this.dropQueue = new Columns.DropQueue({
       onComplete: this.iterationCallback
     });
+
+    this.clearKeyPresses();
+    this.keyPresses.p = 0;
+    this.columns = [];
+
+    for (i = 0; i < this.numColumns; i++) {
+      this.columns.push([]);
+    }
+
+    this.descentSpeed = 2;
+    this.turnNumber = 0;
+    this.combo = 0;
+    this.countdown = 45;
+    this.score = 0;
   };
 
   Game.prototype.clearKeyPresses = function () {
@@ -35,17 +50,7 @@ $(function () {
   };
 
   Game.prototype.play = function () {
-    this.clearKeyPresses();
-    this.keyPresses.p = 0;
-    this.columns = [];
-
-    for (i = 0; i < this.numColumns; i++) {
-      this.columns.push([]);
-    }
-
-    this.descentSpeed = 2;
-    this.turnNumber = 0;
-    this.combo = 0;
+    this.updateScoreCallback();
 
     this.nextPair();
   };
@@ -69,9 +74,17 @@ $(function () {
     this.dropQueue.executeDrop();
   };
 
+  Game.prototype.lowerDifficulty = function () {
+    if (this.descentSpeed > 2) {
+      this.descentSpeed--;
+      this.countdown -= 60;
+    }
+  };
+
   Game.prototype.raiseDifficulty = function () {
     // this.avalanchRows++;
     this.descentSpeed++;
+    this.countdown = 46;
   };
 
   Game.prototype.avalanch = function () {
@@ -128,20 +141,11 @@ $(function () {
     }
   };
 
-  Game.prototype.handleCombo = function () {
-    if (this.combo > 1) {
-      this.descentSpeed -= 1;
-      if (this.descentSpeed < 2) {
-        this.descentSpeed = 2;
-      }
-    }
-    this.combo = 0;
-  };
-
   Game.prototype.maybeExplode = function () {
     var tilesToExplode = Columns.searchForExplosions(this);
 
     if (tilesToExplode.length > 0) {
+      this.exploderCount += tilesToExplode.length;
       this.combo += 1;
       Columns.explodeTiles(this, tilesToExplode); // async
       return true;
@@ -150,14 +154,36 @@ $(function () {
     return false;
   };
 
+  Game.prototype.calculateScore = function () {
+    var scoreAddition = this.exploderCount;
+
+    if (this.combo > 1) {
+      scoreAddition = Math.pow(scoreAddition, this.combo);
+    }
+
+    this.score += scoreAddition;
+    this.updateScoreCallback();
+  };
+
+  Game.prototype.handleCombo = function () {
+    if (this.combo > 1) {
+      this.countdown += 45 * this.combo;
+      this.lowerDifficulty();
+    }
+    this.combo = 0;
+  };
+
   Game.prototype.nextIteration = function () {
     this.killInterval = false;
 
     if (this.maybeExplode()) {
+      this.calculateScore();
       return;
     }
 
+    this.exploderCount = 0;
     this.handleCombo();
+
     if (!this.gameOver()) {
       this.nextTurn();
     } else {
@@ -167,8 +193,9 @@ $(function () {
 
   Game.prototype.nextTurn = function () {
     this.clearKeyPresses();
+    ++this.turnNumber;
 
-    if (++this.turnNumber % 30 === 0) {
+    if (this.countdown == 0) {
       this.raiseDifficulty();
     }
 

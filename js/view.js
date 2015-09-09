@@ -14,11 +14,12 @@ $(function () {
     this.canvas.setHeight(height);
 
     this.keyPresses = { p: 0, a: 0, w: 0, s: 0, d: 0 };
-
     Columns.bindKeys(this.keyPresses);
 
     this.buildOverlay();
     this.addOverlayContent("Welcome", "Play Game");
+
+    this.$score = $("#score");
   };
 
   View.prototype.buildOverlay = function () {
@@ -63,34 +64,52 @@ $(function () {
       .addClass("overlay-btn")
       .text(text);
 
-    $button.one("click", function () {
-      this.start();
-    }.bind(this));
+    $button.one("click", this.start.bind(this));
 
     return $button;
   };
 
   View.prototype.stopCallback = function (headerText, buttonText) {
     this.showOverlay();
+    this.clock.stop();
+
+    if (!this.game.paused) {
+      this.clock.finalCountdown();
+    }
 
     setTimeout(function () {
       this.addOverlayContent(headerText, buttonText);
     }.bind(this), 1000);
   };
 
+  View.prototype.updateScoreCallback = function () {
+    this.$score.text(this.game.score);
+  };
+
   View.prototype.start = function () {
     this.hideOverlay();
+    this.clock && this.clock.stop();
 
-    if (this.game && this.game.paused) {
-      this.game.unpause();
-    } else {
-      this.game = new Columns.Game({
-        canvas: this.canvas,
-        keyPresses: this.keyPresses,
-        stopCallback: this.stopCallback.bind(this)
-      });
+    setTimeout(function () {
+      if (this.game && this.game.paused) {
+        this.clock.start();
+        this.game.unpause();
+      } else {
+        this.game = new Columns.Game({
+          canvas: this.canvas,
+          keyPresses: this.keyPresses,
+          stopCallback: this.stopCallback.bind(this),
+          updateScoreCallback: this.updateScoreCallback.bind(this)
+        });
 
-      this.game.play();
-    }
+        this.clock = new Columns.Clock({
+          game: this.game,
+          clockSelector: "#clock"
+        });
+
+        this.clock.start();
+        this.game.play();
+      }
+    }.bind(this), 0);
   };
 });
