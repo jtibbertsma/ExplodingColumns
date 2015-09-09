@@ -167,7 +167,7 @@ $(function () {
 
   Game.prototype.handleCombo = function () {
     if (this.combo > 1) {
-      this.countdown += 30 * this.combo;
+      this.countdown += 45 * this.combo;
       this.lowerDifficulty();
     }
     this.combo = 0;
