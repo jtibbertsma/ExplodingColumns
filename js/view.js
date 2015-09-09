@@ -71,6 +71,7 @@ $(function () {
 
   View.prototype.stopCallback = function (headerText, buttonText) {
     this.showOverlay();
+    this.clock.stop();
 
     setTimeout(function () {
       this.addOverlayContent(headerText, buttonText);
@@ -85,6 +86,7 @@ $(function () {
     this.hideOverlay();
 
     if (this.game && this.game.paused) {
+      this.clock.start();
       this.game.unpause();
     } else {
       this.game = new Columns.Game({
@@ -93,6 +95,9 @@ $(function () {
         stopCallback: this.stopCallback.bind(this),
         updateScoreCallback: this.updateScoreCallback.bind(this)
       });
+
+      this.clock = new Columns.Clock({ game: this.game });
+      this.clock.start();
 
       this.game.play();
     }
