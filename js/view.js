@@ -14,11 +14,12 @@ $(function () {
     this.canvas.setHeight(height);
 
     this.keyPresses = { p: 0, a: 0, w: 0, s: 0, d: 0 };
-
     Columns.bindKeys(this.keyPresses);
 
     this.buildOverlay();
     this.addOverlayContent("Welcome", "Play Game");
+
+    this.$score = $("#score");
   };
 
   View.prototype.buildOverlay = function () {
@@ -63,9 +64,7 @@ $(function () {
       .addClass("overlay-btn")
       .text(text);
 
-    $button.one("click", function () {
-      this.start();
-    }.bind(this));
+    $button.one("click", this.start.bind(this));
 
     return $button;
   };
@@ -79,7 +78,7 @@ $(function () {
   };
 
   View.prototype.updateScoreCallback = function () {
-    $("#score").text(this.game.score);
+    this.$score.text(this.game.score);
   };
 
   View.prototype.start = function () {

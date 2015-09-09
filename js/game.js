@@ -34,6 +34,8 @@ $(function () {
     this.descentSpeed = 2;
     this.turnNumber = 0;
     this.combo = 0;
+    this.countdown = 45;
+    this.score = 0;
   };
 
   Game.prototype.clearKeyPresses = function () {
@@ -48,7 +50,6 @@ $(function () {
   };
 
   Game.prototype.play = function () {
-    this.score = 0;
     this.updateScoreCallback();
 
     this.nextPair();
