@@ -11,9 +11,10 @@ $(function () {
   };
 
   Clock.prototype.format = function () {
-    var time = this.game.countdown;
+    var minutes = Math.floor(this.game.countdown / 60);
+    var seconds = this.game.countdown % 60;
 
-    return "" + Math.floor(time / 60) + ":" + time % 60;
+    return "" + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
   };
 
   Clock.prototype.setClock = function () {
