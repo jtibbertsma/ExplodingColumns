@@ -8,6 +8,7 @@ $(function () {
     this.canvas.clear();
 
     this.stopCallback = options.stopCallback;
+    this.updateScoreCallback = options.updateScoreCallback;
     this.iterationCallback = this.nextIteration.bind(this);
 
     this.keyPresses = options.keyPresses;
@@ -46,6 +47,7 @@ $(function () {
     this.descentSpeed = 2;
     this.turnNumber = 0;
     this.combo = 0;
+    this.score = 0;
 
     this.nextPair();
   };

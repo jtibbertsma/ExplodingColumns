@@ -78,6 +78,10 @@ $(function () {
     }.bind(this), 1000);
   };
 
+  View.prototype.updateScoreCallback = function () {
+    $("#score").text(this.game.score);
+  };
+
   View.prototype.start = function () {
     this.hideOverlay();
 
@@ -87,7 +91,8 @@ $(function () {
       this.game = new Columns.Game({
         canvas: this.canvas,
         keyPresses: this.keyPresses,
-        stopCallback: this.stopCallback.bind(this)
+        stopCallback: this.stopCallback.bind(this),
+        updateScoreCallback: this.updateScoreCallback.bind(this)
       });
 
       this.game.play();
