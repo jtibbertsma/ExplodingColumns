@@ -96,9 +96,12 @@ $(function () {
         updateScoreCallback: this.updateScoreCallback.bind(this)
       });
 
-      this.clock = new Columns.Clock({ game: this.game });
-      this.clock.start();
+      this.clock = new Columns.Clock({
+        game: this.game,
+        clockSelector: "#clock"
+      });
 
+      this.clock.start();
       this.game.play();
     }
   };

@@ -1,11 +1,11 @@
 $(function () {
-  if (typeof Columns = "undefined") {
+  if (typeof Columns === "undefined") {
     Columns = {};
   }
 
   var Clock = Columns.Clock = function (options) {
     this.game = options.game;
-    this.$clock = $("#clock");
+    this.$clock = $(options.clockSelector);
 
     this.setClock();
   };
