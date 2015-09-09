@@ -36,7 +36,7 @@ $(function () {
 
     this.interval = setInterval(function () {
       this.setClock(--countdown);
-      $("#score").text(++score);
+      $("#score").text(++score);  // refactor
 
       if (countdown === 0) {
         this.stop();
