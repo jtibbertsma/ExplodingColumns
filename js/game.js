@@ -48,6 +48,7 @@ $(function () {
     this.turnNumber = 0;
     this.combo = 0;
     this.score = 0;
+    this.updateScoreCallback();
 
     this.nextPair();
   };
@@ -130,16 +131,6 @@ $(function () {
     }
   };
 
-  Game.prototype.handleCombo = function () {
-    if (this.combo > 1) {
-      this.descentSpeed -= 1;
-      if (this.descentSpeed < 2) {
-        this.descentSpeed = 2;
-      }
-    }
-    this.combo = 0;
-  };
-
   Game.prototype.maybeExplode = function () {
     var tilesToExplode = Columns.searchForExplosions(this);
 
@@ -154,7 +145,24 @@ $(function () {
   };
 
   Game.prototype.calculateScore = function () {
-    var score = 
+    var scoreAddition = this.exploderCount;
+
+    if (this.combo > 1) {
+      scoreAddition = Math.pow(scoreAddition, this.combo);
+    }
+
+    this.score += scoreAddition;
+    this.updateScoreCallback();
+  };
+
+  Game.prototype.handleCombo = function () {
+    if (this.combo > 1) {
+      this.descentSpeed -= 1;
+      if (this.descentSpeed < 2) {
+        this.descentSpeed = 2;
+      }
+    }
+    this.combo = 0;
   };
 
   Game.prototype.nextIteration = function () {
@@ -162,9 +170,11 @@ $(function () {
 
     if (this.maybeExplode()) {
       this.calculateScore();
-      this.handleCombo();
       return;
     }
+
+    this.exploderCount = 0;
+    this.handleCombo();
 
     if (!this.gameOver()) {
       this.nextTurn();
