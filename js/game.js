@@ -26,7 +26,7 @@ $(function () {
     this.keyPresses.p = 0;
     this.columns = [];
 
-    for (i = 0; i < this.numColumns; i++) {
+    for (var i = 0; i < this.numColumns; i++) {
       this.columns.push([]);
     }
 

@@ -23,21 +23,11 @@ $(function () {
   };
 
   Tile.prototype.canMoveLeft = function () {
-    var _canMove = this.canMove(-1);
-    if (!_canMove) {
-      this.game.keyPresses.a = 0;
-    }
-
-    return _canMove;
+    return this.canMove(-1);
   };
 
   Tile.prototype.canMoveRight = function () {
-    var _canMove = this.canMove(1);
-    if (!_canMove) {
-      this.game.keyPresses.d = 0;
-    }
-
-    return _canMove;
+    return this.canMove(1);
   };
 
   Tile.prototype.canMove = function(dir) {

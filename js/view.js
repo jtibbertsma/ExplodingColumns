@@ -75,7 +75,7 @@ $(function () {
     this.clock.stop();
 
     if (!this.game.paused) {
-      this.clock.finalCountdown();
+      this.clock.finalCountdown(this.$score);
     }
 
     setTimeout(function () {

@@ -2,6 +2,10 @@ body {
   margin-top: 25px;
 }
 
+canvas {
+  border: thin #777 solid;
+}
+
 h2.header {
   margin-top: 61px;
   margin-bottom: 40px;
@@ -17,7 +21,6 @@ h2.header {
   position: relative;
   background: white;
   margin-left: 70px;
-  border: thin #777 solid;
 }
 
 .scoreboard {
