@@ -83,7 +83,7 @@ $(function () {
 
   Game.prototype.raiseDifficulty = function () {
     this.descentSpeed++;
-    this.pair.descentSpeedInc();
+    this.pair.descentSpeed++;
   };
 
   Game.prototype.avalanch = function () {
