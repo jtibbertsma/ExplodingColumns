@@ -51,6 +51,7 @@ $(function () {
 
   Game.prototype.play = function () {
     this.updateScoreCallback();
+    this.updateClockCallback();
 
     this.nextPair();
   };
@@ -169,6 +170,7 @@ $(function () {
     if (this.combo > 1) {
       this.countdown += 45 * this.combo;
       this.lowerDifficulty();
+      this.updateClockCallback();
     }
     this.combo = 0;
   };

@@ -7,7 +7,7 @@ $(function () {
     this.game = options.game;
     this.$clock = $(options.clockSelector);
 
-    this.setClock();
+    this.game.updateClockCallback = this.setClock.bind(this);
   };
 
   Clock.prototype.format = function (time) {
