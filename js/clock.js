@@ -7,7 +7,7 @@ $(function () {
     this.game = options.game;
     this.$clock = $(options.clockSelector);
 
-    this.setClock();
+    this.game.updateClockCallback = this.setClock.bind(this);
   };
 
   Clock.prototype.format = function (time) {
@@ -24,8 +24,12 @@ $(function () {
   Clock.prototype.tick = function () {
     if (this.game.countdown > 0) {
       --this.game.countdown;
-      this.setClock();
+    } else {
+      this.game.countdown = 45;
+      this.game.raiseDifficulty();
     }
+
+    this.setClock();
   };
 
   Clock.prototype.finalCountdown = function () {
@@ -36,12 +40,12 @@ $(function () {
 
     this.interval = setInterval(function () {
       this.setClock(--countdown);
-      $("#score").text(++score);
+      $("#score").text(++score);  // refactor
 
       if (countdown === 0) {
         this.stop();
       }
-    }.bind(this), 1000 / 15)
+    }.bind(this), 1000 / 30);
   };
 
   Clock.prototype.start = function () {

@@ -13,7 +13,6 @@ $(function () {
 
     this.keyPresses = options.keyPresses;
     this.numberToExplode = 4;
-    this.avalanchRows = 1;
 
     this.numColumns = this.canvas.width / 20;
     this.startCol = Math.floor(this.numColumns / 2);
@@ -51,6 +50,7 @@ $(function () {
 
   Game.prototype.play = function () {
     this.updateScoreCallback();
+    this.updateClockCallback();
 
     this.nextPair();
   };
@@ -82,22 +82,19 @@ $(function () {
   };
 
   Game.prototype.raiseDifficulty = function () {
-    // this.avalanchRows++;
     this.descentSpeed++;
-    this.countdown = 46;
+    this.pair.descentSpeedInc();
   };
 
   Game.prototype.avalanch = function () {
-    for (var i = 0; i < this.avalanchRows; i++) {
-      for (var j = 0; j < this.numColumns; j++) {
-        if (Math.random() > 0.5) {
-          this.addToDropQueue(new Columns.Tile({
-            color: 'gray',
-            top: -20 - (i * 20),
-            col: j,
-            game: this
-          }));
-        }
+    for (var i = 0; i < this.numColumns; i++) {
+      if (Math.random() > 0.5) {
+        this.addToDropQueue(new Columns.Tile({
+          color: 'gray',
+          top: -20,
+          col: i,
+          game: this
+        }));
       }
     }
 
@@ -169,6 +166,7 @@ $(function () {
     if (this.combo > 1) {
       this.countdown += 45 * this.combo;
       this.lowerDifficulty();
+      this.updateClockCallback();
     }
     this.combo = 0;
   };
@@ -193,13 +191,8 @@ $(function () {
 
   Game.prototype.nextTurn = function () {
     this.clearKeyPresses();
-    ++this.turnNumber;
 
-    if (this.countdown == 0) {
-      this.raiseDifficulty();
-    }
-
-    if (this.turnNumber % 10 === 0) {
+    if (++this.turnNumber % 10 === 0) {
       this.avalanch(); // async
       return;
     }

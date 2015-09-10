@@ -3,15 +3,15 @@ $(function () {
     Columns = {};
   }
 
-  var View = Columns.View = function (canvasId, width, height) {
-    if (width % 20 || height % 20) {
-      throw "canvas width and height must be multiples of 20";
+  var View = Columns.View = function (options) {
+    if (options.canvasWidth && options.canvasWidth % 20) {
+      throw "canvas width must be a multiple of 20";
     }
 
-    this.canvas = new fabric.Canvas(canvasId);
+    this.canvas = new fabric.Canvas(options.canvasId);
 
-    this.canvas.setWidth(width);
-    this.canvas.setHeight(height);
+    this.canvas.setWidth(options.canvasWidth);
+    this.canvas.setHeight(options.canvasHeight);
 
     this.keyPresses = { p: 0, a: 0, w: 0, s: 0, d: 0 };
     Columns.bindKeys(this.keyPresses);
@@ -19,7 +19,8 @@ $(function () {
     this.buildOverlay();
     this.addOverlayContent("Welcome", "Play Game");
 
-    this.$score = $("#score");
+    this.$score = $(options.scoreSelector);
+    this.clockSelector = options.clockSelector;
   };
 
   View.prototype.buildOverlay = function () {
@@ -104,7 +105,7 @@ $(function () {
 
         this.clock = new Columns.Clock({
           game: this.game,
-          clockSelector: "#clock"
+          clockSelector: this.clockSelector
         });
 
         this.clock.start();

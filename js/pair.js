@@ -6,13 +6,14 @@ $(function () {
   var Pair = Columns.Pair = function (options) {
     this.game = options.game;
     this.doneDescending = false;
+    this.descentSpeed = options.descentSpeed;
 
     this.primaryTile = new Columns.Tile({
       color: options.color1,
       top: -40,
       game: this.game,
       col: options.startCol,
-      descentSpeed: options.descentSpeed
+      descentSpeed: this.descentSpeed
     });
 
     this.secondaryTile = new Columns.Tile({
@@ -20,7 +21,7 @@ $(function () {
       top: -20,
       game: this.game,
       col: options.startCol,
-      descentSpeed: options.descentSpeed
+      descentSpeed: this.descentSpeed
     });
 
     this.topTile = this.primaryTile;
@@ -30,6 +31,12 @@ $(function () {
     this.rightTile = null;
 
     this.orientation = "vertical";
+  };
+
+  Pair.prototype.descentSpeedInc = function () {
+    this.descentSpeed++;
+    this.primaryTile.descentSpeed++;
+    this.secondaryTile.descentSpeed++;
   };
 
   Pair.prototype.canMoveLeft = function () {
