@@ -171,7 +171,7 @@ $(function () {
   };
 
   // This function is responsible for putting the tiles
-  // in their proper resting postitions if were done falling.
+  // in their proper resting postitions if we're done falling.
   // The callback starts the next iteration of the main
   // game loop.
   Pair.prototype.canDescend = function (callback) {
