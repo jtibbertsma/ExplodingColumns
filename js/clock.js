@@ -32,7 +32,15 @@ $(function () {
     this.setClock();
   };
 
-  Clock.prototype.finalCountdown = function () {
+  Clock.prototype.start = function () {
+    this.interval = setInterval(this.tick.bind(this), 1000);
+  };
+
+  Clock.prototype.stop = function () {
+    clearInterval(this.interval);
+  };
+
+  Clock.prototype.finalCountdown = function ($score) {
     var score = this.game.score;
     var countdown = this.game.countdown;
     this.game.score += this.game.countdown;
@@ -40,19 +48,11 @@ $(function () {
 
     this.interval = setInterval(function () {
       this.setClock(--countdown);
-      $("#score").text(++score);  // refactor
+      $score.text(++score);
 
       if (countdown === 0) {
         this.stop();
       }
     }.bind(this), 1000 / 30);
-  };
-
-  Clock.prototype.start = function () {
-    this.interval = setInterval(this.tick.bind(this), 1000);
-  };
-
-  Clock.prototype.stop = function () {
-    clearInterval(this.interval);
   };
 });
