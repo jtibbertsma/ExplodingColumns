@@ -50,12 +50,7 @@ $(function () {
   };
 
   Tile.prototype.finishedDescending = function () {
-    // this.descendTo = this.calculateDescendTo();
-    if (this.rect.top > this.descendTo) {
-      return true;
-    }
-
-    return false;
+    return this.rect.top > this.descendTo;
   };
 
   Tile.prototype.jump = function (distance) {
