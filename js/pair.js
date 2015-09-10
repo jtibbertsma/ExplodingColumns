@@ -62,11 +62,26 @@ $(function () {
 
     // rotate right
     if (this.bottomTile === this.primaryTile) {
-      return this.primaryTile.canMoveRight();
+      if (this.primaryTile.canMoveRight()) {
+        return true;
+      } else if (this.primaryTile.canMoveLeft()) {
+        this.moveLeft();
+        return true;
+      } else {
+        return false;
+      }
     }
+
     // rotate left
     else {
-      return this.primaryTile.canMoveLeft();
+      if (this.primaryTile.canMoveLeft()) {
+        return true;
+      } else if (this.primaryTile.canMoveRight()) {
+        this.moveRight();
+        return true;
+      } else {
+        return false;
+      }
     }
   };
 
@@ -126,11 +141,19 @@ $(function () {
     }.bind(this), 0);
   };
 
+  Pair.prototype.moveLeft = function () {
+    this.primaryTile.moveInDir(-1);
+    this.secondaryTile.moveInDir(-1);
+  };
+
+  Pair.prototype.moveRight = function () {
+    this.primaryTile.moveInDir(1);
+    this.secondaryTile.moveInDir(1);
+  };
+
   Pair.prototype.maybeMoveLeft = function () {
     if (this.canMoveLeft()) {
-      this.primaryTile.moveInDir(-1);
-      this.secondaryTile.moveInDir(-1);
-
+      this.moveLeft();
       return true;
     }
 
@@ -139,9 +162,7 @@ $(function () {
 
   Pair.prototype.maybeMoveRight = function () {
     if (this.canMoveRight()) {
-      this.primaryTile.moveInDir(1);
-      this.secondaryTile.moveInDir(1);
-
+      this.moveRight();
       return true;
     }
 
