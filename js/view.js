@@ -4,14 +4,14 @@ $(function () {
   }
 
   var View = Columns.View = function (options) {
-    if (options.width && options.width % 20) {
+    if (options.canvasWidth && options.canvasWidth % 20) {
       throw "canvas width must be a multiple of 20";
     }
 
     this.canvas = new fabric.Canvas(options.canvasId);
 
-    this.canvas.setWidth(options.width);
-    this.canvas.setHeight(options.height);
+    this.canvas.setWidth(options.canvasWidth);
+    this.canvas.setHeight(options.canvasHeight);
 
     this.keyPresses = { p: 0, a: 0, w: 0, s: 0, d: 0 };
     Columns.bindKeys(this.keyPresses);
