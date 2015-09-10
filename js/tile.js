@@ -6,7 +6,6 @@ $(function () {
   var Tile = Columns.Tile = function (options) {
     this.color = options.color;
     this.dropSpeed = 0.3;
-    this.descentSpeed = options.descentSpeed;
     this.game = options.game;
     this.col = options.col;
     this.canvas = this.game.canvas;
@@ -78,10 +77,6 @@ $(function () {
     this.rect.set('top', this.descendTo);
     this.game.columns[this.col].push(this);
     this.row = this.game.columns[this.col].length - 1;
-  };
-
-  Tile.prototype.moveDown = function () {
-    this.rect.set('top', this.rect.top + this.descentSpeed);
   };
 
   Tile.prototype.calculateDescendTo = function () {
