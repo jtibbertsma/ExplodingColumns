@@ -20,7 +20,7 @@ $(function () {
     this.addOverlayContent("Welcome", "Play Game");
 
     this.$score = $(options.scoreSelector);
-    this.clockSelector = options.clockSelector;
+    this.$clock = $(options.clockSelector);
   };
 
   View.prototype.buildOverlay = function () {
@@ -105,7 +105,7 @@ $(function () {
 
         this.clock = new Columns.Clock({
           game: this.game,
-          clockSelector: this.clockSelector
+          $clock: this.$clock
         });
 
         this.clock.start();
