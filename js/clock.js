@@ -41,7 +41,7 @@ $(function () {
       if (countdown === 0) {
         this.stop();
       }
-    }.bind(this), 1000 / 15)
+    }.bind(this), 1000 / 30);
   };
 
   Clock.prototype.start = function () {
