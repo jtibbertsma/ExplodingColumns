@@ -24,8 +24,12 @@ $(function () {
   Clock.prototype.tick = function () {
     if (this.game.countdown > 0) {
       --this.game.countdown;
-      this.setClock();
+    } else {
+      this.game.countdown = 45;
+      this.game.raiseDifficulty();
     }
+
+    this.setClock();
   };
 
   Clock.prototype.finalCountdown = function () {
