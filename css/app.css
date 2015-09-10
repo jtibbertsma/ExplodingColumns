@@ -1,7 +1,3 @@
-canvas {
-  border: thin #777 solid;
-}
-
 body {
   margin-top: 25px;
 }
@@ -21,6 +17,7 @@ h2.header {
   position: relative;
   background: white;
   margin-left: 70px;
+  border: thin #777 solid;
 }
 
 .scoreboard {
