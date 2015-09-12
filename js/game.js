@@ -101,43 +101,6 @@ $(function () {
     setTimeout(this.executeDrop.bind(this), 0);
   };
 
-  Game.prototype.executePendingActions = function () {
-    if (this.keyPresses.p) {
-      this.paused = true;
-      this.killInterval = true;
-      this.stopCallback("Paused", "Unpause");
-    }
-
-    else if (this.keyPresses.a) {
-      if (this.pair.maybeMoveLeft()) {
-        this.keyPresses.a -= 1;
-      } else {
-        this.keyPresses.a = 0;
-      }
-    }
-
-    else if (this.keyPresses.d) {
-      if (this.pair.maybeMoveRight()) {
-        this.keyPresses.d -= 1;
-      } else {
-        this.keyPresses.d = 0;
-      }
-    }
-
-    else if (this.keyPresses.s) {
-      this.killInterval = true;
-      this.pair.drop();
-    }
-
-    else if (this.keyPresses.w) {
-      if (this.pair.maybeRotate()) {
-        this.keyPresses.w -= 1;
-      } else {
-        this.keyPresses.w = 0;
-      }
-    }
-  };
-
   Game.prototype.maybeExplode = function () {
     var tilesToExplode = Columns.searchForExplosions(this);
 
@@ -210,6 +173,43 @@ $(function () {
     });
 
     this.descend();
+  };
+
+  Game.prototype.executePendingActions = function () {
+    if (this.keyPresses.p) {
+      this.paused = true;
+      this.killInterval = true;
+      this.stopCallback("Paused", "Unpause");
+    }
+
+    else if (this.keyPresses.a) {
+      if (this.pair.maybeMoveLeft()) {
+        this.keyPresses.a -= 1;
+      } else {
+        this.keyPresses.a = 0;
+      }
+    }
+
+    else if (this.keyPresses.d) {
+      if (this.pair.maybeMoveRight()) {
+        this.keyPresses.d -= 1;
+      } else {
+        this.keyPresses.d = 0;
+      }
+    }
+
+    else if (this.keyPresses.s) {
+      this.killInterval = true;
+      this.pair.drop();
+    }
+
+    else if (this.keyPresses.w) {
+      if (this.pair.maybeRotate()) {
+        this.keyPresses.w -= 1;
+      } else {
+        this.keyPresses.w = 0;
+      }
+    }
   };
 
   Game.prototype.descend = function () {
