@@ -3,16 +3,16 @@ $(function () {
     Columns = {};
   }
 
-  Columns.searchForExplosions = function (view) {
-    var searcher = new Searcher(view);
+  Columns.searchForExplosions = function (game) {
+    var searcher = new Searcher(game);
     searcher.search();
 
     return searcher.exploders;
   };
 
-  var Searcher = function (view) {
-    this.view = view;
-    this.columns = view.columns;
+  var Searcher = function (game) {
+    this.game = game;
+    this.columns = game.columns;
     this.searched = {};
     this.grays = {};
     this.exploders = [];
@@ -24,7 +24,7 @@ $(function () {
         this.currentIteration = [];
         this.searchNode(this.columns[i][j]);
 
-        if (this.currentIteration.length >= this.view.numberToExplode) {
+        if (this.currentIteration.length >= this.game.numberToExplode) {
           this.exploders = this.exploders.concat(this.currentIteration);
         }
       }
