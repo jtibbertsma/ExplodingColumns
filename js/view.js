@@ -45,8 +45,6 @@ $(function () {
   };
 
   View.prototype.addOverlayContent = function (headerText, buttonText) {
-    this.showOverlay();
-
     var $header = this.buildOverlayHeader(headerText);
     var $button = this.buildOverlayButton(buttonText);
 
