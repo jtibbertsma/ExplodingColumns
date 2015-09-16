@@ -24,7 +24,7 @@ h2.header {
   margin: 0;
 }
 
-#combo.invisible {
+#combo.not-visible {
   display: none;
 }
 
@@ -80,7 +80,7 @@ h2.header {
   background: none;
 }
 
-.transparent.invisible {
+.transparent.not-visible {
   visibility: hidden;
   opacity: 0;
 }
