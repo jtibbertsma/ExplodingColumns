@@ -23,6 +23,10 @@ h2.header {
   font-size: 250px;
 }
 
+#combo.invisible {
+  display: none;
+}
+
 .canvas-container {
   position: relative;
   background: white;
