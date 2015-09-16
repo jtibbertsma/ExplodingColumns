@@ -22,6 +22,9 @@ h2.header {
   font-size: 250px;
   height: 0;
   margin: 0;
+  z-index: 2;
+  top: -86px;
+  left: 492px;
 }
 
 #combo.not-visible {
