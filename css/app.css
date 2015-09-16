@@ -20,6 +20,8 @@ h2.header {
 #combo {
   position: relative;
   font-size: 250px;
+  height: 0;
+  margin: 0;
 }
 
 #combo.invisible {
@@ -66,7 +68,7 @@ h2.header {
   height: 100%;
   background: black;
   opacity: 0.80;
-  transition: opacity 1s linear;
+  transition: opacity 1s cubic-bezier(0, 2.68, 0.1, -0.36);
 }
 
 .overlay {
@@ -78,7 +80,8 @@ h2.header {
   background: none;
 }
 
-.invisible {
+.transparent.invisible {
+  visibility: hidden;
   opacity: 0;
 }
 
