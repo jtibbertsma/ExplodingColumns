@@ -38,11 +38,11 @@ $(function () {
 
   View.prototype.hideOverlay = function () {
     this.$overlay.html("");
-    this.$transparent.addClass("invisible");
+    this.$transparent.addClass("not-visible");
   };
 
   View.prototype.showOverlay = function () {
-    this.$transparent.removeClass("invisible");
+    this.$transparent.removeClass("not-visible");
   };
 
   View.prototype.addOverlayContent = function (headerText, buttonText) {
@@ -102,10 +102,10 @@ $(function () {
 
     this.$combo.text(this.game.combo);
     this.$combo.css("color", comboColors[this.game.combo] || "red");
-    this.$combo.removeClass("invisible");
+    this.$combo.removeClass("not-visible");
 
     this.comboTimeout = setTimeout(function () {
-      this.$combo.addClass("invisible");
+      this.$combo.addClass("not-visible");
     }.bind(this), 3000);
   };
 
