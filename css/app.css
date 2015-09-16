@@ -17,6 +17,16 @@ h2.header {
   height: 615px;
 }
 
+#combo {
+  position: relative;
+  color: red;
+  font-size: 250px;
+}
+
+#combo.invisible {
+  display: none;
+}
+
 .canvas-container {
   position: relative;
   background: white;

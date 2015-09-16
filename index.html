@@ -7,9 +7,6 @@
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
-  <!-- Optional theme -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <link rel="shortcut icon" href="http://img.brothersoft.com/icon/softimage/p/photo_explosion_deluxe-61138.jpeg" type="image/jpeg">
@@ -32,7 +29,7 @@
   <div class="container-fluid">
 
     <div class="row">
-      <div class="col-xs-3">
+      <div class="col-sm-3">
         <h2 class="header">Exploding Columns</h2>
         <h3>Controls</h3>
         <ul>
@@ -54,7 +51,7 @@
         </ul>
       </div>
 
-      <div class="col-xs-9">
+      <div class="col-sm-6">
         <div id="game-container">
           <div class="scoreboard">
             <h3>Score</h3>
@@ -68,9 +65,15 @@
 
           <canvas id="mainCanvas"></canvas>
         </div>
+
+      </div>
+
+      <div class="col-sm-3">
+        <h1 id="combo" class="invisible">0</h1>
       </div>
     </div>
   </div>
+  
 
   <script>
     $(function () {
@@ -79,7 +82,8 @@
         canvasWidth: 460,
         canvasHeight: 500,
         scoreSelector: "#score",
-        clockSelector: "#clock"
+        clockSelector: "#clock",
+        comboSelector: "#combo"
       });
     });
   </script>

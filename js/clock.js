@@ -5,7 +5,7 @@ $(function () {
 
   var Clock = Columns.Clock = function (options) {
     this.game = options.game;
-    this.$clock = $(options.clockSelector);
+    this.$clock = options.$clock;
 
     this.game.updateClockCallback = this.setClock.bind(this);
   };

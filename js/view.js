@@ -20,7 +20,8 @@ $(function () {
     this.addOverlayContent("Welcome", "Play Game");
 
     this.$score = $(options.scoreSelector);
-    this.clockSelector = options.clockSelector;
+    this.$clock = $(options.clockSelector);
+    this.$combo = $(options.comboSelector);
   };
 
   View.prototype.buildOverlay = function () {
@@ -45,8 +46,6 @@ $(function () {
   };
 
   View.prototype.addOverlayContent = function (headerText, buttonText) {
-    this.showOverlay();
-
     var $header = this.buildOverlayHeader(headerText);
     var $button = this.buildOverlayButton(buttonText);
 
@@ -87,6 +86,30 @@ $(function () {
     this.$score.text(this.game.score);
   };
 
+  var comboColors = [
+    null,
+    null,
+    "#ff9300",
+    "#ff6c00",
+    "#ff4600",
+    "#ff2000"
+  ];
+
+  View.prototype.updateComboCallback = function () {
+    if (this.comboTimeout) {
+      clearTimeout(this.comboTimeout);
+    }
+
+    this.$combo.text(this.game.combo);
+    if (this.game.combo > 1) {
+      this.$combo.css("color", comboColors[this.game.combo] || "#ff2000");
+      this.$combo.removeClass("invisible");
+      this.comboTimeout = setTimeout(function () {
+        this.$combo.addClass("invisible");
+      }.bind(this), 3000);
+    }
+  };
+
   View.prototype.start = function () {
     this.hideOverlay();
     this.clock && this.clock.stop();
@@ -100,12 +123,13 @@ $(function () {
           canvas: this.canvas,
           keyPresses: this.keyPresses,
           stopCallback: this.stopCallback.bind(this),
-          updateScoreCallback: this.updateScoreCallback.bind(this)
+          updateScoreCallback: this.updateScoreCallback.bind(this),
+          updateComboCallback: this.updateComboCallback.bind(this)
         });
 
         this.clock = new Columns.Clock({
           game: this.game,
-          clockSelector: this.clockSelector
+          $clock: this.$clock
         });
 
         this.clock.start();
