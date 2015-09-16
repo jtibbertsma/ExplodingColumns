@@ -9,6 +9,7 @@ $(function () {
 
     this.stopCallback = options.stopCallback;
     this.updateScoreCallback = options.updateScoreCallback;
+    this.updateComboCallback = options.updateComboCallback;
     this.iterationCallback = this.nextIteration.bind(this);
 
     this.keyPresses = options.keyPresses;
@@ -107,6 +108,7 @@ $(function () {
     if (tilesToExplode.length > 0) {
       this.exploderCount += tilesToExplode.length;
       this.combo += 1;
+      this.updateComboCallback();
       Columns.explodeTiles(this, tilesToExplode); // async
       return true;
     }
