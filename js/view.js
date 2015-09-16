@@ -101,13 +101,12 @@ $(function () {
     }
 
     this.$combo.text(this.game.combo);
-    if (this.game.combo > 1) {
-      this.$combo.css("color", comboColors[this.game.combo] || "red");
-      this.$combo.removeClass("invisible");
-      this.comboTimeout = setTimeout(function () {
-        this.$combo.addClass("invisible");
-      }.bind(this), 3000);
-    }
+    this.$combo.css("color", comboColors[this.game.combo] || "red");
+    this.$combo.removeClass("invisible");
+
+    this.comboTimeout = setTimeout(function () {
+      this.$combo.addClass("invisible");
+    }.bind(this), 3000);
   };
 
   View.prototype.start = function () {

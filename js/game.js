@@ -107,8 +107,9 @@ $(function () {
 
     if (tilesToExplode.length > 0) {
       this.exploderCount += tilesToExplode.length;
-      this.combo += 1;
-      this.updateComboCallback();
+      if (++this.combo > 1) {
+        this.updateComboCallback();
+      }
       Columns.explodeTiles(this, tilesToExplode); // async
       return true;
     }
