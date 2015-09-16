@@ -102,7 +102,7 @@ $(function () {
 
     this.$combo.text(this.game.combo);
     if (this.game.combo > 1) {
-      this.$combo.css("color", comboColors[this.game.combo] || "#ff2000");
+      this.$combo.css("color", comboColors[this.game.combo] || "red");
       this.$combo.removeClass("invisible");
       this.comboTimeout = setTimeout(function () {
         this.$combo.addClass("invisible");
