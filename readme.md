@@ -32,9 +32,9 @@ This is a list of features that I intend to implement soon.
 - [x] Have a button to begin playing instead of starting as soon as the player navigates to the page.
 - [x] After the game ends, have a button to play again. (Right now, you have to reload the page)
   - [x] Have a nice transparent overlay over the canvas that fades in after the game ends
-- [ ] Factor game logic out of GameView.
-- [ ] Instead of a combo just slowing down fall rate if the fall rate has sped up, let combos prevent the fall rate from rising for a certain amount of time.
-- [ ] Display the number of turns that a player has survived.
+- [x] Factor game logic out of GameView.
+- [x] Instead of a combo just slowing down fall rate if the fall rate has sped up, let combos prevent the fall rate from rising for a certain amount of time.
+- [x] Count a player's score.
   - [ ] Store a player's high score as a cookie on their browser.
 - [ ] Display the colors of the pair of tiles that will fall on the next turn.
 - [ ] Improve page style in general.
