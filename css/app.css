@@ -66,6 +66,7 @@ h2.header {
   z-index: 2;
   left: 505px;
   top: 55px;
+  transition: opacity 250ms ease-out;
 }
 
 .combo-banner {
