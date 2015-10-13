@@ -19,9 +19,19 @@ $(function () {
     this.buildOverlay();
     this.addOverlayContent("Welcome", "Play Game");
 
+    var $letters = $('.combo-letter')
+        time = 0;
+    $letters.each(function (idx, letter) {
+      setTimeout(function () {
+        $(letter).addClass("rainbow");
+      }, time);
+      time += 250;
+    });
+
     this.$score = $(options.scoreSelector);
     this.$clock = $(options.clockSelector);
     this.$combo = $(options.comboSelector);
+    this.$comboWrap = $(options.comboWrapSelector);
   };
 
   View.prototype.buildOverlay = function () {
@@ -102,10 +112,10 @@ $(function () {
 
     this.$combo.text(this.game.combo);
     this.$combo.css("color", comboColors[this.game.combo] || "red");
-    this.$combo.removeClass("not-visible");
+    this.$comboWrap.removeClass("not-visible");
 
     this.comboTimeout = setTimeout(function () {
-      this.$combo.addClass("not-visible");
+      this.$comboWrap.addClass("not-visible");
     }.bind(this), 3000);
   };
 
