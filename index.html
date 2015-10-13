@@ -62,7 +62,17 @@
             <h3>Countdown</h3>
             <span id="clock">0:00</span>
           </div>
-          <h1 id="combo" class="not-visible">0</h1>
+
+          <div id="combo-wrap" class="not-visible">
+            <div class="combo-banner">
+              <span class="combo-letter">C</span>
+              <span class="combo-letter">o</span>
+              <span class="combo-letter">m</span>
+              <span class="combo-letter">b</span>
+              <span class="combo-letter">o</span>
+            </div>
+            <h1 id="combo">0</h1>
+          </div>
 
           <canvas id="mainCanvas"></canvas>
         </div>
@@ -80,7 +90,8 @@
         canvasHeight: 500,
         scoreSelector: "#score",
         clockSelector: "#clock",
-        comboSelector: "#combo"
+        comboSelector: "#combo",
+        comboWrapSelector: "#combo-wrap"
       });
     });
   </script>

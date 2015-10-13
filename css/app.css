@@ -18,17 +18,58 @@ h2.header {
 }
 
 #combo {
-  position: relative;
   font-size: 250px;
-  height: 0;
-  margin: 0;
-  z-index: 2;
-  top: -86px;
-  left: 492px;
+  line-height: 135px;
 }
 
-#combo.not-visible {
-  display: none;
+@-webkit-keyframes rainbow {
+  0%   { color: red;    }
+  20%  { color: orange; }
+  40%  { color: yellow; }
+  60%  { color: green;  }
+  80%  { color: blue;   }
+  100% { color: purple; }
+}
+
+@-moz-keyframes rainbow {
+  0%   { color: red;    }
+  20%  { color: orange; }
+  40%  { color: yellow; }
+  60%  { color: green;  }
+  80%  { color: blue;   }
+  100% { color: purple; }
+}
+
+@keyframes rainbow {
+  0%   { color: red;    }
+  20%  { color: orange; }
+  40%  { color: yellow; }
+  60%  { color: green;  }
+  80%  { color: blue;   }
+  100% { color: purple; }
+}
+
+.combo-letter {
+  font-size: 25px;
+  font-weight: 200;
+  font-style: italic;
+}
+
+.rainbow {
+  -moz-animation: rainbow ease-out 2s infinite;
+  -webkit-animation: rainbow ease-out 2s infinite;
+  animation: rainbow ease-out 2s infinite;
+}
+
+#combo-wrap {
+  position: absolute;
+  z-index: 2;
+  left: 505px;
+  top: 55px;
+}
+
+.combo-banner {
+  margin-left: 20px;
 }
 
 .canvas-container {
@@ -83,7 +124,7 @@ h2.header {
   background: none;
 }
 
-.transparent.not-visible {
+.not-visible {
   visibility: hidden;
   opacity: 0;
 }
