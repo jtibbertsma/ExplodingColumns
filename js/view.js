@@ -71,7 +71,7 @@ $(function () {
 
   View.prototype.buildOverlayHighsc = function () {
     var score = this.getHighScore();
-    return $("<h4>").addClass("overlay-header").text("High Score: " + score);
+    return $("<h3>").addClass("high-score").text("High Score: " + score);
   };
 
   View.prototype.buildOverlayButton = function (text) {
