@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="css/app.css">
 
   <script src="assets/fabric.min.js"></script>
+  <script src="assets/js.cookie.js"></script>
 
   <script src="js/pair.js"></script>
   <script src="js/tile.js"></script>
@@ -80,17 +81,16 @@
       </div>
     </div>
   </div>
-  
 
   <script>
     $(function () {
       new Columns.View({
-        canvasId: "mainCanvas",
-        canvasWidth: 460,
-        canvasHeight: 500,
-        scoreSelector: "#score",
-        clockSelector: "#clock",
-        comboSelector: "#combo",
+        canvasId:          "mainCanvas",
+        canvasWidth:        460,
+        canvasHeight:       500,
+        scoreSelector:     "#score",
+        clockSelector:     "#clock",
+        comboSelector:     "#combo",
         comboWrapSelector: "#combo-wrap"
       });
     });
