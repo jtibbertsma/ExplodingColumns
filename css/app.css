@@ -136,8 +136,15 @@ h2.header {
 }
 
 .overlay-header {
-  margin-bottom: 375px;
+  margin-bottom: 20px;
   font-size: 30px;
   text-align: center;
   color: white;
+}
+
+.high-score {
+  color: white;
+  padding-left: 24px;
+  margin-bottom: 335px;
+  font-weight: 200;
 }

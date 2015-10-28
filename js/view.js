@@ -57,14 +57,21 @@ $(function () {
 
   View.prototype.addOverlayContent = function (headerText, buttonText) {
     var $header = this.buildOverlayHeader(headerText);
+    var $highsc = this.buildOverlayHighsc();
     var $button = this.buildOverlayButton(buttonText);
 
     this.$overlay.append($header);
+    this.$overlay.append($highsc);
     this.$overlay.append($button);
   };
 
   View.prototype.buildOverlayHeader = function (text) {
     return $("<h3>").addClass("overlay-header").text(text);
+  };
+
+  View.prototype.buildOverlayHighsc = function () {
+    var score = this.getHighScore();
+    return $("<h3>").addClass("high-score").text("High Score: " + score);
   };
 
   View.prototype.buildOverlayButton = function (text) {
@@ -79,13 +86,20 @@ $(function () {
     return $button;
   };
 
-  View.prototype.stopCallback = function (headerText, buttonText) {
-    this.showOverlay();
-    this.clock.stop();
+  View.prototype.getHighScore = function () {
+    var currentScore = (this.game && this.game.score) || 0,
+        highScore = Cookies.get('highScore') || 0;
+    highScore = Math.max(currentScore, highScore);
+    Cookies.set('highScore', highScore);
+    return highScore;
+  };
 
+  View.prototype.stopCallback = function (headerText, buttonText) {
+    this.clock.stop();
     if (!this.game.paused) {
       this.clock.finalCountdown(this.$score);
     }
+    this.showOverlay();
 
     setTimeout(function () {
       this.addOverlayContent(headerText, buttonText);
