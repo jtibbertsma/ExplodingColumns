@@ -19,7 +19,7 @@ $(function () {
     this.buildOverlay();
     this.addOverlayContent("Welcome", "Play Game");
 
-    var $letters = $('.combo-letter')
+    var $letters = $('.combo-letter'),
         time = 0;
     $letters.each(function (idx, letter) {
       setTimeout(function () {
