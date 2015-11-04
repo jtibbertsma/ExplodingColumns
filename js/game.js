@@ -60,6 +60,7 @@ $(function () {
     this.paused = false;
     this.killInterval = false;
     this.keyPresses.p = 0;
+    this.clearKeyPresses();
     this.descend();
   };
 
