@@ -90,7 +90,7 @@ $(function () {
     var currentScore = (this.game && this.game.score) || 0,
         highScore = Cookies.get('highScore') || 0;
     highScore = Math.max(currentScore, highScore);
-    Cookies.set('highScore', highScore);
+    Cookies.set('highScore', highScore, { expires: 9001 });
     return highScore;
   };
 
