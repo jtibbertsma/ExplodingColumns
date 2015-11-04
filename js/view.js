@@ -28,6 +28,8 @@ $(function () {
       time += 250;
     });
 
+    this.maybeUnpause = this._maybeUnpause.bind(this);
+
     this.$score = $(options.scoreSelector);
     this.$clock = $(options.clockSelector);
     this.$combo = $(options.comboSelector);
@@ -98,13 +100,23 @@ $(function () {
     this.clock.stop();
     if (!this.game.paused) {
       this.clock.finalCountdown(this.$score);
+    } else {
+      $(document).on('keydown', this.maybeUnpause);
     }
     this.showOverlay();
 
-    setTimeout(function () {
+    this.addContentTimeout = setTimeout(function () {
       this.addOverlayContent(headerText, buttonText);
     }.bind(this), 1000);
   };
+
+  View.prototype._maybeUnpause = function (event) {
+    if (event.keyCode === 80) {
+      $(document).off('keydown', this.maybeUnpause);
+      clearTimeout(this.addContentTimeout);
+      this.start();
+    }
+  }
 
   View.prototype.updateScoreCallback = function () {
     this.$score.text(this.game.score);
