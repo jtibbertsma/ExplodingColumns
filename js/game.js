@@ -19,10 +19,6 @@ $(function () {
     this.startCol = Math.floor(this.numColumns / 2);
     this.colors = ['red', 'blue', 'green', 'orange', 'purple', 'yellow'];
 
-    this.dropQueue = new Columns.DropQueue({
-      onComplete: this.iterationCallback
-    });
-
     this.clearKeyPresses();
     this.keyPresses.p = 0;
     this.columns = [];
@@ -30,6 +26,11 @@ $(function () {
     for (var i = 0; i < this.numColumns; i++) {
       this.columns.push([]);
     }
+
+    this.dropQueue = new Columns.DropQueue({
+      onComplete: this.iterationCallback,
+      columns: this.columns
+    });
 
     this.descentSpeed = 2;
     this.turnNumber = 0;
