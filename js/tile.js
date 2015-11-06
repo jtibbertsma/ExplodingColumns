@@ -90,6 +90,9 @@ $(function () {
     var callback = options.onComplete;
     var distance = (this.descendTo + options.topOffset) - this.rect.top;
 
+    // console.log(distance);
+    // console.log(this.rect.top);
+
     var duration = distance / this.dropSpeed;
 
     this.rect.animate("top", this.descendTo + options.topOffset, {
@@ -97,7 +100,13 @@ $(function () {
       onChange: this.canvas.renderAll.bind(this.canvas),
       easing: fabric.util.ease.easeOutBounce,
       onComplete: function () {
-        this.stop();
+        if (options.index) {
+          this.game.columns[this.col][options.index] = this;
+          this.row = options.index;
+          this.rect.top = (this.canvas.height - 20) - options.index * 20
+        } else {
+          this.stop();
+        }
         callback();
       }.bind(this)
     });
