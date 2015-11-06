@@ -5,6 +5,7 @@ $(function () {
 
   var DropQueue = Columns.DropQueue = function (options) {
     this.onComplete = options.onComplete;
+    this.columns = options.columns;
     this._dropQueue = {};
   };
 
@@ -34,8 +35,10 @@ $(function () {
   DropQueue.prototype.dropColumn = function (tiles) {
     for (var time = 0, i = 0, offset = 0;
             i < tiles.length; time += 30, offset -= 20, i++) {
+      var index = this.columns[tiles[i].col].length - offset/20;
       setTimeout(tiles[i].drop.bind(tiles[i], {
         topOffset: offset,
+        index: index,
         onComplete: this.doneDropping.bind(this)
       }), time);
     }
