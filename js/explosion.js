@@ -3,14 +3,14 @@ $(function () {
     Columns = {};
   }
 
-  Columns.explodeTiles = function (view, tiles) {
-    var exploder = new Exploder(view, tiles);
+  Columns.explodeTiles = function (game, tiles) {
+    var exploder = new Exploder(game, tiles);
     exploder.explode();
   };
 
-  var Exploder = function (view, tiles) {
-    this.view = view;
-    this.columns = view.columns;
+  var Exploder = function (game, tiles) {
+    this.game = game;
+    this.columns = game.columns;
     this.tiles = tiles;
     this.alreadyChecked = {};
     this.numPendingExplosions = tiles.length;
@@ -20,10 +20,10 @@ $(function () {
   Exploder.prototype.explode = function () {
     this.spliceColumns();
 
-    this.view.canvas.on("doneExploding", function () {
+    this.game.canvas.on("doneExploding", function () {
       if (--this.numPendingExplosions === 0) {
-        this.view.canvas.off("doneExploding");
-        this.view.executeDrop();
+        this.game.canvas.off("doneExploding");
+        this.game.executeDrop();
       }
     }.bind(this));
 
@@ -44,7 +44,7 @@ $(function () {
 
         this.alreadyChecked[nodeIndex] = true;
         if (!this.explosionIndices[nodeIndex]) {
-          this.view.addToDropQueue(node);
+          this.game.addToDropQueue(node);
         }
       }
 
